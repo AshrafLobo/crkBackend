@@ -1,6 +1,7 @@
 const express = require("express");
 const config = require("config");
 
+const auth = require("./routes/auth");
 const company = require("./routes/company");
 // const user = require("./routes/user");
 
@@ -13,7 +14,7 @@ const app = express();
 app.use(express.json());
 
 // app.use("/api/user", user);
-// app.use("/api/auth", auth);
+app.use("/api/auth", auth);
 app.use("/api/company", company);
 
 const PORT = process.env.PORT || 3000;

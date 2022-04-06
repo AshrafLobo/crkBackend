@@ -44,10 +44,10 @@ class DbService {
     }
   }
 
-  async getOne(id, database, table) {
+  async getOne(id, database, table, field = "id") {
     try {
       const response = await new Promise((resolve, reject) => {
-        const query = `SELECT * FROM ${database}.${table} WHERE id = ?`;
+        const query = `SELECT * FROM ${database}.${table} WHERE ${field} = ?`;
         this.connection.query(query, [id], (err, results) => {
           if (err) reject(new Error(err.message));
           resolve(results);
