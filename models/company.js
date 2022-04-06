@@ -1,3 +1,7 @@
+const config = require("config");
+const jwt = require("jsonwebtoken");
+const _ = require("lodash");
+
 const DbService = require("../dbService");
 
 class Company extends DbService {
@@ -14,6 +18,10 @@ class Company extends DbService {
 
   async getOne(id) {
     return await super.getOne(id, this.#database, "company");
+  }
+
+  generateCompanyToken(data) {
+    return jwt.sign(_.pick(data, ["id", "db"]), config.get("jwtPrivateKey"));
   }
 }
 

@@ -1,6 +1,4 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
-const _ = require("lodash");
 const Joi = require("joi");
 
 const Company = require("../models/company");
@@ -32,7 +30,7 @@ router.post("/", async (req, res) => {
       .status(404)
       .send(`The company with the id ${req.body.id} does not exist`);
 
-  const token = jwt.sign(_.pick(data[0], ["id"]), "jwtPrivateKey");
+  const token = company.generateCompanyToken(data[0]);
   res.send(token);
 });
 
