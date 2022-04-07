@@ -5,7 +5,7 @@ const { Company, validate } = require("../models/company");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  company = new Company();
+  const company = new Company();
   const data = await company.getAll();
   company.close();
 
@@ -16,7 +16,7 @@ router.post("/", async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.message);
 
-  company = new Company();
+  const company = new Company();
   const data = await company.getOne(req.body.id);
   company.close();
 

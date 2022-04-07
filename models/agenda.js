@@ -1,23 +1,17 @@
 const DbService = require("../dbService");
 
 class Agenda extends DbService {
-  #database = null;
-  #table = null;
-
   constructor(database) {
-    super();
+    super(database, "agendas");
     super.connect();
-
-    this.#database = database;
-    this.#table = "agendas";
   }
 
   async getAll() {
-    return await super.getAll(this.#database, this.#table);
+    return await super.getAll();
   }
 
   async getOne(id) {
-    return await super.getOne(id, this.#database, this.#table, "");
+    return await super.getOne(id);
   }
 }
 

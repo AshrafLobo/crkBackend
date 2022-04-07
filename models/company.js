@@ -1,3 +1,4 @@
+const Joi = require("joi");
 const config = require("config");
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
@@ -6,20 +7,18 @@ const DbService = require("../dbService");
 
 /** Company model */
 class Company extends DbService {
-  /** Initialise database name */
-  #database = "agm";
-
+  /** Connect to database  */
   constructor() {
-    super();
+    super("agm", "company");
     super.connect();
   }
 
   async getAll() {
-    return await super.getAll(this.#database, "company");
+    return await super.getAll();
   }
 
   async getOne(id) {
-    return await super.getOne(id, this.#database, "company");
+    return await super.getOne(id);
   }
 
   /** Generate token for selected company */

@@ -8,24 +8,18 @@ const DbService = require("../dbService");
 
 /** Downloads model */
 class Downloads extends DbService {
-  #database = null;
-  #table = null;
-
   /** Set database and table name */
   constructor(database) {
-    super();
+    super(database, "downloads");
     super.connect();
-
-    this.#database = database;
-    this.#table = "downloads";
   }
 
   async getOne(id) {
-    return await super.getOne(id, this.#database, this.#table);
+    return await super.getOne(id);
   }
 
   async getAll() {
-    return await super.getAll(this.#database, this.#table);
+    return await super.getAll();
   }
 }
 

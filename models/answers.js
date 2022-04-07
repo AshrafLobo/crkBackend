@@ -8,25 +8,40 @@ const DbService = require("../dbService");
 
 /** Downloads model */
 class Answers extends DbService {
-  #database = null;
-  #table = null;
-
   /** Set database and table name */
   constructor(database) {
-    super();
+    super(database, "answers");
     super.connect();
-
-    this.#database = database;
-    this.#table = "downloads";
   }
 
   async getOne(id) {
-    return await super.getOne(id, this.#database, this.#table);
+    return await super.getOne(id);
   }
 
   async getAll() {
-    return await super.getAll(this.#database, this.#table);
+    return await super.getAll();
+  }
+
+  async createRecord(data) {
+    data["created"] = new Date();
+    data["created"] = data["created"].toISOString();
+
+    const answers = await this.getAll();
+    data["answer_no"] = answers.length + 1;
+
+    return await super.createRecord(data);
   }
 }
 
-module.exports = Answers;
+/** Validate login credentials */
+function validate(data) {
+  const schema = Joi.object({
+    agenda_no: Joi.number().required(),
+    answer: Joi.string().required(),
+  });
+
+  return schema.validate(data);
+}
+
+exports.Answers = Answers;
+exports.validate = validate;

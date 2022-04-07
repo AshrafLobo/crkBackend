@@ -8,20 +8,14 @@ const DbService = require("../dbService");
 
 /** User model */
 class User extends DbService {
-  #database = null;
-  #table = null;
-
   /** Set database and table name */
   constructor(database) {
-    super();
+    super(database, "users");
     super.connect();
-
-    this.#database = database;
-    this.#table = "users";
   }
 
-  async getOne(pnoneNo) {
-    return await super.getOne(pnoneNo, this.#database, this.#table, "phoneNo");
+  async getOne(phoneNo) {
+    return await super.getOne(phoneNo, "phoneNo");
   }
 
   /** Generate a jwt token for logged in user */
@@ -33,7 +27,7 @@ class User extends DbService {
 /** Validate login credentials */
 function validate(data) {
   const schema = Joi.object({
-    number: Joi.string().pattern(new RegExp("[0-9]{12}")).required().messages({
+    phoneNo: Joi.string().pattern(new RegExp("[0-9]{12}")).required().messages({
       "string.pattern.base":
         "{{#label}} should be a valid 12 digit phone number",
     }),

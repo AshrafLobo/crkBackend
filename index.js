@@ -3,8 +3,9 @@ const express = require("express");
 const config = require("config");
 const dotenv = require("dotenv");
 
-const auth = require("./routes/auth");
 const agenda = require("./routes/agenda");
+const answers = require("./routes/answers");
+const auth = require("./routes/auth");
 const company = require("./routes/company");
 const downloads = require("./routes/downloads");
 
@@ -20,8 +21,9 @@ if (!config.get("jwtPrivateKey")) {
 const app = express();
 app.use(express.json());
 
-app.use("/api/auth", auth);
 app.use("/api/agenda", agenda);
+app.use("/api/answers", answers);
+app.use("/api/auth", auth);
 app.use("/api/company", company);
 app.use("/api/downloads", downloads);
 

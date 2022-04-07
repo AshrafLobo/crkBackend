@@ -11,7 +11,7 @@ router.post("/", [companyAuth], async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   const user = new User(req.company.db);
-  const data = await user.getOne(req.body.number);
+  const data = await user.getOne(req.body.phoneNo);
   user.close();
 
   if (!data || data.length == 0)
