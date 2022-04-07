@@ -5,11 +5,12 @@ const { User, validate } = require("../models/user");
 
 const router = express.Router();
 
+/** Login route */
 router.post("/", [companyAuth], async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const user = new User(req.company.db, "users");
+  const user = new User(req.company.db);
   const data = await user.getOne(req.body.number);
   user.close();
 

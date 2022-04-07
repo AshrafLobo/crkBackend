@@ -1,3 +1,4 @@
+/** Import statements */
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
@@ -5,31 +6,31 @@ const config = require("config");
 
 const DbService = require("../dbService");
 
+/** User model */
 class User extends DbService {
   #database = null;
   #table = null;
 
-  constructor(database, table) {
+  /** Set database and table name */
+  constructor(database) {
     super();
     super.connect();
 
     this.#database = database;
-    this.#table = table;
+    this.#table = "users";
   }
 
-  async getAll() {
-    return await super.getAll(this.#database, this.#table);
+  async getOne(pnoneNo) {
+    return await super.getOne(pnoneNo, this.#database, this.#table, "phoneNo");
   }
 
-  async getOne(id) {
-    return await super.getOne(id, this.#database, this.#table, "phoneNo");
-  }
-
+  /** Generate a jwt token for logged in user */
   generateToken(data) {
     return jwt.sign(_.pick(data, ["id"]), config.get("jwtPrivateKey"));
   }
 }
 
+/** Validate login credentials */
 function validate(data) {
   const schema = Joi.object({
     number: Joi.string().pattern(new RegExp("[0-9]{12}")).required().messages({

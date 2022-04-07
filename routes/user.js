@@ -5,14 +5,12 @@ const { companyAuth } = require("../middleware/auth");
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {});
-
 router.get("/", [companyAuth], async (req, res) => {
-  const user = new User(req.company.db, "users");
+  const user = new User(req.company.db);
   const data = await user.getAll();
   user.close();
 
-  console.log(data);
+  res.send(data);
 });
 
 module.exports = router;

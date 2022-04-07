@@ -4,7 +4,9 @@ const _ = require("lodash");
 
 const DbService = require("../dbService");
 
+/** Company model */
 class Company extends DbService {
+  /** Initialise database name */
   #database = "agm";
 
   constructor() {
@@ -20,9 +22,20 @@ class Company extends DbService {
     return await super.getOne(id, this.#database, "company");
   }
 
+  /** Generate token for selected company */
   generateCompanyToken(data) {
     return jwt.sign(_.pick(data, ["id", "db"]), config.get("jwtPrivateKey"));
   }
 }
 
-module.exports = Company;
+/** Validate login credentials */
+function validate(data) {
+  const schema = Joi.object({
+    id: Joi.number().required(),
+  });
+
+  return schema.validate(data);
+}
+
+exports.Company = Company;
+exports.validate = validate;

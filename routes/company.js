@@ -1,7 +1,6 @@
 const express = require("express");
-const Joi = require("joi");
 
-const Company = require("../models/company");
+const { Company, validate } = require("../models/company");
 
 const router = express.Router();
 
@@ -14,11 +13,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const schema = Joi.object({
-    id: Joi.number().required(),
-  });
-
-  const { error } = schema.validate(req.body);
+  const { error } = validate(req.body);
   if (error) return res.status(400).send(error.message);
 
   company = new Company();
