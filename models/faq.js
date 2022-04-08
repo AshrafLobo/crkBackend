@@ -1,11 +1,11 @@
 /** Import statements */
 const DbService = require("../dbService");
 
-/** Downloads model */
-class Downloads extends DbService {
+/** Faq model */
+class Faq extends DbService {
   /** Set database and table name */
   constructor(database) {
-    super(database, "downloads");
+    super(database, "faq");
     super.connect();
   }
 
@@ -18,4 +18,4 @@ class Downloads extends DbService {
   }
 }
 
-module.exports = Downloads;
+module.exports = Faq;
