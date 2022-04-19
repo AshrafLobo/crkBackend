@@ -86,8 +86,27 @@ class DbService {
       const response = await new Promise((resolve, reject) => {
         const query = `INSERT INTO ${this.#table} (??) VALUES (?)`;
         this.connection.query(query, [keys, values], (err, result) => {
+          /** Query error */
           if (err) reject(new Error(err.message));
           resolve(result);
+        });
+      });
+
+      return response;
+    } catch (err) {
+      /** Error if query is ok */
+      console.log(err);
+    }
+  }
+
+  /** Update a record */
+  async updateRecord(data, queryMetric, queryField = "id") {
+    try {
+      const response = await new Promise((resolve, reject) => {
+        const query = `UPDATE ${this.#table} SET ? WHERE ${queryField} = ?`;
+        this.connection.query(query, [data, queryMetric], (err, result) => {
+          if (err) reject(new Error(err.message));
+          resolve(result.message);
         });
       });
 

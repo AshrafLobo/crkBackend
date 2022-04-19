@@ -33,7 +33,21 @@ class Proxy extends DbService {
     return await super.createRecord(data);
   }
 
-  /** Generate a jwt token for logged in user */
+  async updateRecord(data, phoneNo) {
+    return await super.updateRecord(data, phoneNo, "phoneNo");
+  }
+
+  /** Generate a pin for a verified proxy */
+  generatePin() {
+    return generator.generate({
+      length: 4,
+      numbers: true,
+      uppercase: false,
+      lowercase: false,
+    });
+  }
+
+  /** Generate a jwt token for logged in proxy */
   generateToken(data) {
     return jwt.sign(_.pick(data, ["id"]), config.get("jwtPrivateKey"));
   }
@@ -58,6 +72,13 @@ function validate(data) {
 
 function validateCode(data) {
   const schema = Joi.object({
+    phoneNo: Joi.string()
+      .pattern(new RegExp("^[0-9]{12}$"))
+      .required()
+      .messages({
+        "string.pattern.base":
+          "{{#label}} should be a valid 12 digit phone number",
+      }),
     code: Joi.string()
       .pattern(new RegExp("^[0-9A-Z]{4}$"))
       .required()

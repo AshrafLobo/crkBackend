@@ -30,29 +30,26 @@ router.post("/", [companyAuth, auth], async (req, res) => {
   });
 });
 
-// router.post("/validate", [companyAuth, auth], (req, res) => {
-//   const { error } = validateCode(req.body);
-//   if (error) return res.status(400).send(error.message);
+router.post("/validate", [companyAuth, auth], async (req, res) => {
+  const { error } = validateCode(req.body);
+  if (error) return res.status(400).send(error.message);
 
-//   const proxy = new Proxy(req.company.db);
+  const proxy = new Proxy(req.company.db);
+  let data = await proxy.getOne(req.body.phoneNo);
 
-//   let data = await proxy.getOne(req.body.phoneNo);
-//   if (data && data.length > 0)
-//     return res.status(400).send("Proxy already exists.");
+  if (!data || data.length == 0)
+    return res.status(400).send("Invalid phone number or code");
 
-//   data = await proxy.createRecord({
-//     ...req.body,
-//     users_MemberNo: req.user.MemberNo,
-//   });
-//   proxy.close();
+  if (data[0].code != req.body.code)
+    return res.status(400).send("Invalid phone number or code");
 
-//   if (!data.insertId) return res.status(500).send(data.message);
+  const response = await proxy.updateRecord(
+    { pin: proxy.generatePin() },
+    data[0].phoneNo
+  );
+  proxy.close();
 
-//   res.send({
-//     id: data.insertId,
-//     ...req.body,
-//     users_MemberNo: req.user.MemberNo,
-//   });
-// });
+  res.send(response);
+});
 
 module.exports = router;
