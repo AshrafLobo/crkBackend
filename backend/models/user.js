@@ -30,11 +30,14 @@ class User extends DbService {
 /** Validate login credentials */
 function validate(data) {
   const schema = Joi.object({
-    phoneNo: Joi.string().pattern(new RegExp("[0-9]{12}")).required().messages({
-      "string.pattern.base":
-        "{{#label}} should be a valid 12 digit phone number",
-    }),
-    pin: Joi.string().pattern(new RegExp("[0-9]{4}")).required().messages({
+    phoneNo: Joi.string()
+      .pattern(new RegExp("^[0-9]{12}$"))
+      .required()
+      .messages({
+        "string.pattern.base":
+          "{{#label}} should be a valid 12 digit phone number",
+      }),
+    pin: Joi.string().pattern(new RegExp("^[0-9]{4}$")).required().messages({
       "string.pattern.base": "{{#label}} should be a valid 4 digit number",
     }),
   });

@@ -41,10 +41,13 @@ class Proxy extends DbService {
 
 function validate(data) {
   const schema = Joi.object({
-    phoneNo: Joi.string().pattern(new RegExp("[0-9]{12}")).required().messages({
-      "string.pattern.base":
-        "{{#label}} should be a valid 12 digit phone number",
-    }),
+    phoneNo: Joi.string()
+      .pattern(new RegExp("^[0-9]{12}$"))
+      .required()
+      .messages({
+        "string.pattern.base":
+          "{{#label}} should be a valid 12 digit phone number",
+      }),
     full_name: Joi.string().required(),
     ID_RegCert_No: Joi.string().max(8).pattern(new RegExp("[0-9]+")).required(),
     language: Joi.string().valid("English", "Kiswahili").required(),
@@ -53,5 +56,19 @@ function validate(data) {
   return schema.validate(data);
 }
 
+function validateCode(data) {
+  const schema = Joi.object({
+    code: Joi.string()
+      .pattern(new RegExp("^[0-9A-Z]{4}$"))
+      .required()
+      .messages({
+        "string.pattern.base": "{{#label}} should be a valid 4 digit code",
+      }),
+  });
+
+  return schema.validate(data);
+}
+
 exports.Proxy = Proxy;
 exports.validate = validate;
+exports.validateCode = validateCode;
