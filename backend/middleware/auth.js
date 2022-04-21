@@ -1,20 +1,6 @@
 const jwt = require("jsonwebtoken");
 const config = require("config");
 
-/** Require company */
-function companyAuth(req, res, next) {
-  const token = req.header("x-company-token");
-  if (!token) return res.status(401).send("Access denied. No token provided.");
-
-  try {
-    const payload = jwt.verify(token, config.get("jwtPrivateKey"));
-    req.company = payload;
-    next();
-  } catch (error) {
-    res.status(400).send("Invalid token.");
-  }
-}
-
 /** Require login */
 function auth(req, res, next) {
   const token = req.header("x-auth-token");
@@ -29,5 +15,4 @@ function auth(req, res, next) {
   }
 }
 
-exports.companyAuth = companyAuth;
-exports.auth = auth;
+module.exports = auth;

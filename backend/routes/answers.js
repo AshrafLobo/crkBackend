@@ -1,20 +1,20 @@
 const express = require("express");
 
 const { Answers, validate } = require("../models/answers");
-const { companyAuth, auth } = require("../middleware/auth");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 
-router.get("/", [companyAuth, auth], async (req, res) => {
-  const answers = new Answers(req.company.db);
+router.get("/", [auth], async (req, res) => {
+  const answers = new Answers(req.user.db);
   const data = await answers.getAll();
   answers.close();
 
   res.send(data);
 });
 
-router.get("/:id", [companyAuth, auth], async (req, res) => {
-  const answers = new Answers(req.company.db);
+router.get("/:id", [auth], async (req, res) => {
+  const answers = new Answers(req.user.db);
   const data = await answers.getOne(req.params.id);
   answers.close();
 
@@ -26,11 +26,11 @@ router.get("/:id", [companyAuth, auth], async (req, res) => {
   res.send(data);
 });
 
-router.post("/", [companyAuth, auth], async (req, res) => {
+router.post("/", [auth], async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.message);
 
-  const answers = new Answers(req.company.db);
+  const answers = new Answers(req.user.db);
   const data = await answers.createRecord(req.body);
   answers.close();
 

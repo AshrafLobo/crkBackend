@@ -20,11 +20,6 @@ class Company extends DbService {
   async getOne(id) {
     return await super.getOne(id);
   }
-
-  /** Generate token for selected company */
-  generateCompanyToken(data) {
-    return jwt.sign(_.pick(data, ["id", "db"]), config.get("jwtPrivateKey"));
-  }
 }
 
 /** Validate login credentials */

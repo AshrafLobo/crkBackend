@@ -1,15 +1,15 @@
 const express = require("express");
 
 const { Proxy, validate, validateCode } = require("../models/proxy");
-const { companyAuth, auth } = require("../middleware/auth");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 
-router.post("/", [companyAuth, auth], async (req, res) => {
+router.post("/", [auth], async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.message);
 
-  const proxy = new Proxy(req.company.db);
+  const proxy = new Proxy(req.user.db);
 
   let data = await proxy.getOne(req.body.phoneNo);
   if (data && data.length > 0)
@@ -30,11 +30,11 @@ router.post("/", [companyAuth, auth], async (req, res) => {
   });
 });
 
-router.post("/validate", [companyAuth, auth], async (req, res) => {
+router.post("/validate", [auth], async (req, res) => {
   const { error } = validateCode(req.body);
   if (error) return res.status(400).send(error.message);
 
-  const proxy = new Proxy(req.company.db);
+  const proxy = new Proxy(req.user.db);
   let data = await proxy.getOne(req.body.phoneNo);
 
   if (!data || data.length == 0)

@@ -21,7 +21,7 @@ class User extends DbService {
   /** Generate a jwt token for logged in user */
   generateToken(data) {
     return jwt.sign(
-      _.pick(data, ["id", "phoneNo"]),
+      _.pick(data, ["id", "phoneNo", "db"]),
       config.get("jwtPrivateKey")
     );
   }
@@ -40,6 +40,7 @@ function validate(data) {
     pin: Joi.string().pattern(new RegExp("^[0-9]{4}$")).required().messages({
       "string.pattern.base": "{{#label}} should be a valid 4 digit number",
     }),
+    db: Joi.string().required(),
   });
 
   return schema.validate(data);

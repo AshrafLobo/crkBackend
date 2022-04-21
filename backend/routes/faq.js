@@ -1,20 +1,20 @@
 const express = require("express");
 
 const Faq = require("../models/faq");
-const { companyAuth, auth } = require("../middleware/auth");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 
-router.get("/", [companyAuth, auth], async (req, res) => {
-  const faq = new Faq(req.company.db);
+router.get("/", [auth], async (req, res) => {
+  const faq = new Faq(req.user.db);
   const data = await faq.getAll();
   faq.close();
 
   res.send(data);
 });
 
-router.get("/:id", [companyAuth, auth], async (req, res) => {
-  const faq = new Faq(req.company.db);
+router.get("/:id", [auth], async (req, res) => {
+  const faq = new Faq(req.user.db);
   const data = await faq.getOne(req.params.id);
   faq.close();
 

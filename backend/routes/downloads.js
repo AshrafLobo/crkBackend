@@ -1,20 +1,20 @@
 const express = require("express");
 
 const Downloads = require("../models/downloads");
-const { companyAuth, auth } = require("../middleware/auth");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 
-router.get("/", [companyAuth, auth], async (req, res) => {
-  const downloads = new Downloads(req.company.db);
+router.get("/", [auth], async (req, res) => {
+  const downloads = new Downloads(req.user.db);
   const data = await downloads.getAll();
   downloads.close();
 
   res.send(data);
 });
 
-router.get("/:id", [companyAuth, auth], async (req, res) => {
-  const downloads = new Downloads(req.company.db);
+router.get("/:id", [auth], async (req, res) => {
+  const downloads = new Downloads(req.user.db);
   const data = await downloads.getOne(req.params.id);
   downloads.close();
 
