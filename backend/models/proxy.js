@@ -46,11 +46,6 @@ class Proxy extends DbService {
       lowercase: false,
     });
   }
-
-  /** Generate a jwt token for logged in proxy */
-  generateToken(data) {
-    return jwt.sign(_.pick(data, ["id"]), config.get("jwtPrivateKey"));
-  }
 }
 
 function validate(data) {

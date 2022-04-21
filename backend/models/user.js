@@ -21,7 +21,7 @@ class User extends DbService {
   /** Generate a jwt token for logged in user */
   generateToken(data) {
     return jwt.sign(
-      _.pick(data, ["id", "MemberNo"]),
+      _.pick(data, ["id", "phoneNo"]),
       config.get("jwtPrivateKey")
     );
   }
