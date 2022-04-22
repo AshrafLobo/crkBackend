@@ -11,8 +11,10 @@ function TextArea(props) {
       <Field
         id={name}
         name={name}
+        as="textarea"
+        className="form-control"
+        rows={5}
         {...rest}
-        as={(props) => <Form.Control {...props} as="textarea" />}
       />
       <ErrorMessage className="text-danger" name={name} component={Form.Text} />
     </Form.Group>
