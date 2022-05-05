@@ -3,17 +3,26 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Button } from "react-bootstrap";
 
-import FormikControl from "./FormikControl";
+import FormikControl from "./form-controls/FormikControl";
 
 function LoginForm(props) {
+  const companyOptions = [
+    { key: "Select a company", value: "" },
+    { key: "Comp-rite", value: 0 },
+    { key: "Wpp Scangroup", value: 1 },
+    { key: "Total", value: 2 },
+  ];
+
   const initialValues = {
-    email: "",
-    password: "",
+    company: "",
+    phoneNo: "",
+    pin: "",
   };
 
   const validationSchema = Yup.object({
-    email: Yup.string().email("Invalid email format").required("Required"),
-    password: Yup.string().required("Required"),
+    company: Yup.string().required("Required"),
+    phoneNo: Yup.string().required("Required"),
+    pin: Yup.string().required("Required"),
   });
 
   const onSubmit = (values) => {
@@ -30,16 +39,22 @@ function LoginForm(props) {
         return (
           <Form>
             <FormikControl
+              control="select"
+              label="Choose a company"
+              name="company"
+              options={companyOptions}
+            />
+            <FormikControl
               control="input"
-              type="email"
-              label="Email"
-              name="email"
+              type="text"
+              label="Phone number"
+              name="phoneNo"
             />
             <FormikControl
               control="input"
               type="password"
-              label="Password"
-              name="password"
+              label="Pin"
+              name="pin"
             />
             <Button
               className="float-end my-1"

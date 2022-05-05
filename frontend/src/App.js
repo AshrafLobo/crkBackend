@@ -1,14 +1,12 @@
 import { Container } from "react-bootstrap";
 
 import "./App.scss";
-import EnrollmentForm from "./components/EnrollmentForm";
-import LoginForm from "./components/LoginForm";
-import RegistrationForm from "./components/RegistrationForm";
+import LoginForm from "./components/forms/LoginForm";
 
 function App() {
   return (
     <Container className="my-4">
-      <EnrollmentForm />
+      <LoginForm />
     </Container>
   );
 }
