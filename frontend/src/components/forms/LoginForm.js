@@ -5,7 +5,7 @@ import { Button } from "react-bootstrap";
 
 import FormikControl from "./form-controls/FormikControl";
 
-function LoginForm(props) {
+function LoginForm({ handleLogin }) {
   const companyOptions = [
     { key: "Select a company", value: "" },
     { key: "Comp-rite", value: 0 },
@@ -26,7 +26,7 @@ function LoginForm(props) {
   });
 
   const onSubmit = (values) => {
-    console.log("Form data", values);
+    handleLogin(values);
   };
 
   return (
