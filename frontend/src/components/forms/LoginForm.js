@@ -37,7 +37,7 @@ function LoginForm({ handleLogin }) {
     >
       {(formik) => {
         return (
-          <Form>
+          <Form className="h-100 p-4">
             <FormikControl
               control="select"
               label="Choose a company"

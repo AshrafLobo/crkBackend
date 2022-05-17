@@ -1,4 +1,5 @@
 import React from "react";
+import { Container } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../utilities/auth";
 
@@ -18,7 +19,11 @@ function Login(props) {
     }
   };
 
-  return <LoginForm handleLogin={handleLogin} />;
+  return (
+    <Container className="h-100">
+      <LoginForm handleLogin={handleLogin} />
+    </Container>
+  );
 }
 
 export default Login;

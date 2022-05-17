@@ -1,0 +1,16 @@
+@import "../../variables";
+
+@mixin navigation {
+  background: $primary;
+
+  a {
+    &:hover {
+      color: $secondary !important;
+    }
+
+    &:active {
+      color: $secondary !important ;
+      font-weight: bold;
+    }
+  }
+}
