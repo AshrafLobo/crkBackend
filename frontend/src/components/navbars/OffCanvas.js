@@ -19,7 +19,7 @@ function OffCanvas(props) {
 
   return (
     <>
-      <Navbar key={false} bg="light" expand={false} className="mb-3 mx-0 px-0">
+      <Navbar key={false} bg="light" expand={false} className="mx-0 px-0">
         <Container fluid>
           <Navbar.Brand href="#">Navbar Offcanvas</Navbar.Brand>
           <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${false}`} />

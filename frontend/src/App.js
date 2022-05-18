@@ -13,24 +13,22 @@ import "./App.scss";
 
 function App() {
   return (
-    <div className="App">
-      <AuthProvider>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <RequireAuth>
-                <Home />
-              </RequireAuth>
-            }
-          >
-            <Route path="profile" element={<Profile />} />
-          </Route>
-          <Route path="login" element={<Login />} />
-          <Route path="*" element={<NoMatch />} />
-        </Routes>
-      </AuthProvider>
-    </div>
+    <AuthProvider>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <RequireAuth>
+              <Home />
+            </RequireAuth>
+          }
+        >
+          <Route path="profile" element={<Profile />} />
+        </Route>
+        <Route path="login" element={<Login />} />
+        <Route path="*" element={<NoMatch />} />
+      </Routes>
+    </AuthProvider>
   );
 }
 

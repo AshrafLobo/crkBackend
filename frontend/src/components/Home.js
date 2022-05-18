@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col } from "react-bootstrap";
 import { Outlet } from "react-router-dom";
 import useBreakpoint from "bootstrap-5-breakpoint-react-hook";
 
@@ -14,22 +13,32 @@ function Home(props) {
     checkScreenSize(breakpoint) === "small" ? setShow(true) : setShow(false);
   }, [breakpoint]);
 
-  return (
-    <Row className="m-0 h-100">
-      {show ? (
+  return show ? (
+    <>
+      <Navbar />
+      <Outlet />
+    </>
+  ) : (
+    <>
+      <div className="h-100" style={styles.sidenav}>
         <Navbar />
-      ) : (
-        <Col className="p-0 h-100" xs={12} lg={3}>
-          <Navbar />
-        </Col>
-      )}
-      <Col className="p-0 h-100" xs={12} lg={9}>
-        <div className="m-2">
-          <Outlet />
-        </div>
-      </Col>
-    </Row>
+      </div>
+      <div style={styles.body}>
+        <Outlet />
+      </div>
+    </>
   );
 }
+
+const styles = {
+  sidenav: {
+    width: "20%",
+    position: "fixed",
+  },
+  body: {
+    width: "80%",
+    marginLeft: "20%",
+  },
+};
 
 export default Home;
