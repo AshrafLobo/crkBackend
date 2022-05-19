@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Nav, Navbar, Offcanvas } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 import useBreakpoint from "bootstrap-5-breakpoint-react-hook";
 
 import { navigationData } from "./navigationData";
@@ -38,7 +39,12 @@ function OffCanvas(props) {
               <Nav className="justify-content-end flex-grow-1 pe-3">
                 {navigationData.map((value, key) => {
                   return (
-                    <Nav.Link className="text-light" key={key}>
+                    <Nav.Link
+                      className="text-light"
+                      key={key}
+                      to={value.link}
+                      as={NavLink}
+                    >
                       {value.title}
                     </Nav.Link>
                   );

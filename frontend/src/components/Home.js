@@ -23,21 +23,22 @@ function Home(props) {
       <div className="h-100" style={styles.sidenav}>
         <Navbar />
       </div>
-      <div style={styles.body}>
+      <div style={styles.main_content}>
         <Outlet />
       </div>
     </>
   );
 }
 
+const sidenavWidth = "15%";
 const styles = {
   sidenav: {
-    width: "20%",
+    width: sidenavWidth,
     position: "fixed",
   },
-  body: {
+  main_content: {
     width: "80%",
-    marginLeft: "20%",
+    marginLeft: sidenavWidth,
   },
 };
 

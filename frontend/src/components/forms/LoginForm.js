@@ -1,18 +1,11 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Button } from "react-bootstrap";
+import { Button, Col, Container } from "react-bootstrap";
 
 import FormikControl from "./form-controls/FormikControl";
 
-function LoginForm({ handleLogin }) {
-  const companyOptions = [
-    { key: "Select a company", value: "" },
-    { key: "Comp-rite", value: 0 },
-    { key: "Wpp Scangroup", value: 1 },
-    { key: "Total", value: 2 },
-  ];
-
+function LoginForm({ handleLogin, options }) {
   const initialValues = {
     company: "",
     phoneNo: "",
@@ -30,44 +23,54 @@ function LoginForm({ handleLogin }) {
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={onSubmit}
-    >
-      {(formik) => {
-        return (
-          <Form className="h-100 p-4">
-            <FormikControl
-              control="select"
-              label="Choose a company"
-              name="company"
-              options={companyOptions}
-            />
-            <FormikControl
-              control="input"
-              type="text"
-              label="Phone number"
-              name="phoneNo"
-            />
-            <FormikControl
-              control="input"
-              type="password"
-              label="Pin"
-              name="pin"
-            />
-            <Button
-              className="float-end my-1"
-              type="submit"
-              variant="outline-primary"
-              disabled={!formik.isValid}
-            >
-              Submit
-            </Button>
-          </Form>
-        );
-      }}
-    </Formik>
+    <Container className="vh-100 row mx-auto p-0">
+      <Col
+        xs={11}
+        lg={6}
+        className="mx-auto p-4 py-md-2 py-lg-4 align-self-center border border-1 rounded"
+      >
+        <h2>Login</h2>
+        <hr />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}
+        >
+          {(formik) => {
+            return (
+              <Form className="h-100">
+                <FormikControl
+                  control="select"
+                  label="Choose a company"
+                  name="company"
+                  options={options}
+                />
+                <FormikControl
+                  control="input"
+                  type="text"
+                  label="Phone number"
+                  name="phoneNo"
+                />
+                <FormikControl
+                  control="input"
+                  type="password"
+                  label="Pin"
+                  name="pin"
+                />
+                <Button
+                  className="float-end my-1"
+                  type="submit"
+                  variant="outline-primary"
+                  disabled={!formik.isValid}
+                >
+                  Submit
+                </Button>
+              </Form>
+            );
+          }}
+        </Formik>
+      </Col>
+    </Container>
   );
 }
 

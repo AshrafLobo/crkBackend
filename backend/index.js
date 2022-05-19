@@ -1,5 +1,6 @@
 /** Import statements */
 const express = require("express");
+const cors = require("cors");
 const config = require("config");
 const dotenv = require("dotenv");
 
@@ -22,6 +23,7 @@ if (!config.get("jwtPrivateKey")) {
 /** Middleware */
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.use("/api/agenda", agenda);
 app.use("/api/answers", answers);
