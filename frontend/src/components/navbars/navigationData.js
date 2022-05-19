@@ -31,8 +31,4 @@ export const navigationData = [
     title: "Profile",
     link: "profile",
   },
-  {
-    title: "Sign out",
-    link: "/sign_out",
-  },
 ];

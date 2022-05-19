@@ -30,7 +30,7 @@ function Home(props) {
   );
 }
 
-const sidenavWidth = "15%";
+const sidenavWidth = "20%";
 const styles = {
   sidenav: {
     width: sidenavWidth,

@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { Container, Nav, Navbar, Offcanvas } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import { Button, Container, Nav, Navbar, Offcanvas } from "react-bootstrap";
+import { NavLink, useNavigate } from "react-router-dom";
 import useBreakpoint from "bootstrap-5-breakpoint-react-hook";
 
 import { navigationData } from "./navigationData";
 import checkScreenSize from "../../utilities/checkScreenSize";
 
 import styles from "./OffCanvas.module.scss";
+import { useAuth } from "../../utilities/auth";
 
 function OffCanvas(props) {
+  const auth = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async (values) => {
+    await auth.logout();
+    navigate("login", { replace: true });
+  };
+
   const [offCanvasSize, setOffCanvasSize] = useState("w-50");
   const breakpoint = useBreakpoint();
 
@@ -49,6 +58,13 @@ function OffCanvas(props) {
                     </Nav.Link>
                   );
                 })}
+                <Button
+                  className="float-end my-1"
+                  variant="secondary"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
               </Nav>
             </Offcanvas.Body>
           </Navbar.Offcanvas>

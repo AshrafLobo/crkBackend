@@ -35,9 +35,9 @@ function Login(props) {
     })();
   }, []);
 
-  const handleLogin = (values) => {
+  const handleLogin = async (values) => {
     if (Object.keys(values).length > 0) {
-      auth.login(values.phoneNo);
+      await auth.login(values);
       navigate(redirectPath, { replace: true });
     }
   };

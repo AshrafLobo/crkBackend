@@ -7,13 +7,13 @@ import FormikControl from "./form-controls/FormikControl";
 
 function LoginForm({ handleLogin, options }) {
   const initialValues = {
-    company: "",
+    db: "",
     phoneNo: "",
     pin: "",
   };
 
   const validationSchema = Yup.object({
-    company: Yup.string().required("Required"),
+    db: Yup.string().required("Required"),
     phoneNo: Yup.string().required("Required"),
     pin: Yup.string().required("Required"),
   });
@@ -42,7 +42,7 @@ function LoginForm({ handleLogin, options }) {
                 <FormikControl
                   control="select"
                   label="Choose a company"
-                  name="company"
+                  name="db"
                   options={options}
                 />
                 <FormikControl
