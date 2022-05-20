@@ -7,11 +7,24 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const login = async (res) => {
-    const { data } = await axios.post("http://localhost:5000/api/auth/", res);
-    localStorage.setItem("x-auth-token", data);
-    const { phoneNo } = jwt_decode(data);
-    setUser(phoneNo);
+  const login = async (user) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/",
+        user
+      );
+      const { data } = response;
+
+      localStorage.setItem("x-auth-token", data);
+
+      const { phoneNo } = jwt_decode(data);
+      setUser(phoneNo);
+
+      return response;
+    } catch (error) {
+      const response = error.response;
+      return response;
+    }
   };
 
   const logout = () => {

@@ -35,10 +35,18 @@ function Login(props) {
     })();
   }, []);
 
-  const handleLogin = async (values) => {
+  const handleLogin = async (values, setError) => {
     if (Object.keys(values).length > 0) {
-      await auth.login(values);
-      navigate(redirectPath, { replace: true });
+      const { status, data } = await auth.login(values);
+
+      if (status === 400) {
+        setError({
+          phoneNo: data,
+          pin: data,
+        });
+      } else {
+        navigate(redirectPath, { replace: true });
+      }
     }
   };
 

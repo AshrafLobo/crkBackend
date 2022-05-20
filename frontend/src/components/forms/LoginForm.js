@@ -18,8 +18,8 @@ function LoginForm({ handleLogin, options }) {
     pin: Yup.string().required("Required"),
   });
 
-  const onSubmit = (values) => {
-    handleLogin(values);
+  const onSubmit = (values, { setErrors }) => {
+    handleLogin(values, setErrors);
   };
 
   return (
