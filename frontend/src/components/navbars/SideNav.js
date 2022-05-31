@@ -16,16 +16,20 @@ function SideNav(props) {
   };
 
   return (
-    <Nav className={`flex-column h-100 p-0 ${styles.sidenav}`}>
-      <div className="my-5 mx-3">
+    <Nav className={`flex-column vh-100 p-0 ${styles.sidenav}`}>
+      <div className="my-5">
         {navigationData.map((value, key) => {
           return (
             <Nav.Link
-              className="text-light"
+              className="text-light p-1"
               key={key}
               to={value.link}
               as={NavLink}
             >
+              <i
+                className={`bi ${value.icon} me-1`}
+                style={{ fontSize: 12 }}
+              ></i>
               {value.title}
             </Nav.Link>
           );

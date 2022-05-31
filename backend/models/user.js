@@ -18,6 +18,10 @@ class User extends DbService {
     return await super.getOne(phoneNo, "phoneNo");
   }
 
+  async updateRecord(data, phoneNo) {
+    return await super.updateRecord(data, phoneNo, "phoneNo");
+  }
+
   /** Generate a jwt token for logged in user */
   generateToken(data) {
     return jwt.sign(
@@ -46,5 +50,24 @@ function validate(data) {
   return schema.validate(data);
 }
 
+/** Validate user details */
+function validateUser(data) {
+  const schema = Joi.object({
+    name: Joi.string().required(),
+    phoneNo: Joi.string()
+      .pattern(new RegExp("^[0-9]{12}$"))
+      .required()
+      .messages({
+        "string.pattern.base":
+          "{{#label}} should be a valid 12 digit phone number",
+      }),
+    email: Joi.string().email(),
+    paymentMethod: Joi.string().required(),
+  });
+
+  return schema.validate(data);
+}
+
 exports.User = User;
 exports.validate = validate;
+exports.validateUser = validateUser;

@@ -54,6 +54,10 @@ function OffCanvas(props) {
                       to={value.link}
                       as={NavLink}
                     >
+                      <i
+                        className={`bi ${value.icon} me-1`}
+                        style={{ fontSize: 12 }}
+                      ></i>
                       {value.title}
                     </Nav.Link>
                   );

@@ -2,8 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { useAuth } from "../utilities/auth";
-import LoginForm from "./forms/LoginForm";
+import { useAuth } from "../../utilities/auth";
+import LoginForm from "../forms/LoginForm";
 
 function Login(props) {
   const auth = useAuth();

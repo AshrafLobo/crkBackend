@@ -14,8 +14,12 @@ function LoginForm({ handleLogin, options }) {
 
   const validationSchema = Yup.object({
     db: Yup.string().required("Required"),
-    phoneNo: Yup.string().required("Required"),
-    pin: Yup.string().required("Required"),
+    phoneNo: Yup.string()
+      .matches(/^254[0-9]{9}$/, "Value should be a valid 12 digit phone number")
+      .required("Required"),
+    pin: Yup.string()
+      .matches(/^[0-9]{4}$/, "Value should be a valid 4 digit pin")
+      .required("Required"),
   });
 
   const onSubmit = (values, { setErrors }) => {

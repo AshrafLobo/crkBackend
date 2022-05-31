@@ -1,11 +1,10 @@
 import { createContext, useContext, useState } from "react";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
 
   const login = async (user) => {
     try {
@@ -16,9 +15,7 @@ export const AuthProvider = ({ children }) => {
       const { data } = response;
 
       localStorage.setItem("x-auth-token", data);
-
-      const { phoneNo } = jwt_decode(data);
-      setUser(phoneNo);
+      setToken(data);
 
       return response;
     } catch (error) {
@@ -29,11 +26,11 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem("x-auth-token");
-    setUser(null);
+    setToken(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

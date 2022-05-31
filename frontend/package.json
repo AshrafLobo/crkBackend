@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.1",
     "bootstrap-5-breakpoint-react-hook": "^1.1.0",
+    "bootstrap-icons": "^1.8.3",
     "formik": "^2.2.9",
     "jwt-decode": "^3.1.2",
     "react": "^18.0.0",

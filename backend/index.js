@@ -11,6 +11,7 @@ const company = require("./routes/company");
 const downloads = require("./routes/downloads");
 const faq = require("./routes/faq");
 const proxy = require("./routes/proxy");
+const user = require("./routes/user");
 
 /** Check if `jwtPrivateKey` is set */
 dotenv.config();
@@ -32,6 +33,7 @@ app.use("/api/company", company);
 app.use("/api/downloads", downloads);
 app.use("/api/faq", faq);
 app.use("/api/proxy", proxy);
+app.use("/api/user", user);
 
 /** Start the express server */
 const PORT = process.env.PORT || 3000;

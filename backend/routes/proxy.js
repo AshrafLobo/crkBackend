@@ -5,6 +5,7 @@ const auth = require("../middleware/auth");
 
 const router = express.Router();
 
+/** Create new proxy  */
 router.post("/", [auth], async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.message);
@@ -30,6 +31,7 @@ router.post("/", [auth], async (req, res) => {
   });
 });
 
+/** Route for proxy login */
 router.post("/validate", [auth], async (req, res) => {
   const { error } = validateCode(req.body);
   if (error) return res.status(400).send(error.message);
