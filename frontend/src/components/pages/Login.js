@@ -1,8 +1,8 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../utilities/auth";
+import DataProvider from "../../utilities/DataProvider";
 import LoginForm from "../forms/LoginForm";
 
 function Login(props) {
@@ -23,7 +23,9 @@ function Login(props) {
     ];
 
     (async () => {
-      const { data } = await axios.get("http://localhost:5000/api/company/");
+      const provider = new DataProvider();
+      const { data } = await provider.get("company");
+
       data.forEach((value) => {
         opt.push({
           key: value.name,

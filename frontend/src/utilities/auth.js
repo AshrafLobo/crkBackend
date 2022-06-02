@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
-import axios from "axios";
+
+import DataProvider from "./DataProvider";
 
 const AuthContext = createContext(null);
 
@@ -7,21 +8,16 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
 
   const login = async (user) => {
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/",
-        user
-      );
-      const { data } = response;
+    const provider = new DataProvider();
+    const response = await provider.post("auth", user);
+    const { data } = response;
 
+    if (data && data.length > 0) {
       localStorage.setItem("x-auth-token", data);
       setToken(data);
-
-      return response;
-    } catch (error) {
-      const response = error.response;
-      return response;
     }
+
+    return response;
   };
 
   const logout = () => {

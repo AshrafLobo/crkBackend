@@ -1,46 +1,39 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import jwt_decode from "jwt-decode";
 
 import ProfileEditForm from "../forms/ProfileEditForm";
 import { useAuth } from "../../utilities/auth";
+import DataProvider from "../../utilities/DataProvider";
 
 function Profile(props) {
   const auth = useAuth();
+  const provider = new DataProvider();
+  const { phoneNo: PhoneNumber } = jwt_decode(auth.token);
 
   const [disabled, setDisabled] = useState(true);
   const [user, setUser] = useState({});
 
   useEffect(() => {
     (async () => {
-      try {
-        const { phoneNo: PhoneNumber } = jwt_decode(auth.token);
+      const { data } = await provider.get("user", PhoneNumber, {
+        "x-auth-token": auth.token,
+      });
 
-        const { data } = await axios.get(
-          `http://localhost:5000/api/user/${PhoneNumber}`,
-          {
-            headers: { "x-auth-token": auth.token },
-          }
-        );
+      let {
+        full_name = "N/A",
+        phoneNo = "N/A",
+        PaymentName = null,
+        email = "N/A",
+      } = data;
 
-        let {
-          full_name = "N/A",
-          phoneNo = "N/A",
-          PaymentName = null,
-          email = "N/A",
-        } = data;
+      if (!PaymentName) PaymentName = "Cheque";
 
-        if (!PaymentName) PaymentName = "Cheque";
-
-        setUser({
-          name: full_name,
-          phoneNo: phoneNo,
-          paymentMethod: PaymentName,
-          email: email,
-        });
-      } catch (error) {
-        console.log("Error", error);
-      }
+      setUser({
+        name: full_name,
+        phoneNo: phoneNo,
+        paymentMethod: PaymentName,
+        email: email,
+      });
     })();
   }, []);
 
@@ -48,8 +41,10 @@ function Profile(props) {
     setDisabled(!disabled);
   };
 
-  const handleSaveEdit = (value) => {
-    console.log("Values", value);
+  const handleSaveEdit = async (value) => {
+    await provider.update("user", value, PhoneNumber, {
+      "x-auth-token": auth.token,
+    });
     setDisabled(true);
   };
 
