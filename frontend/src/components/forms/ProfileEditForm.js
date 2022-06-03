@@ -9,7 +9,7 @@ function ProfileEditForm(props) {
   const {
     disabled,
     user: { name = "", phoneNo = "", paymentMethod = "Cheque", email = "" },
-    clickHandlers: { handleEdit, handleChangePin, handleSaveEdit },
+    clickHandlers: { handleEdit, handleShow, handleSaveEdit },
   } = props;
 
   const initialValues = {
@@ -49,11 +49,11 @@ function ProfileEditForm(props) {
 
   return (
     <>
-      <Card className="m-3">
+      <Card>
         <Card.Header className="row m-0">
           <h5 className="col-xs-12 col-lg-6">User Details</h5>
           <Row className="col-xs-12 col-lg-6 m-0">
-            <button className="col" onClick={handleChangePin}>
+            <button className="col" onClick={handleShow}>
               <i className="bi bi-lock-fill me-1"></i>
               Change Pin
             </button>

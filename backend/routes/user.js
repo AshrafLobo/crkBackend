@@ -1,8 +1,9 @@
 const express = require("express");
 const _ = require("lodash");
 
-const { User, validateUser } = require("../models/user");
+const { User, validateUser, validateChangePin } = require("../models/user");
 const auth = require("../middleware/auth");
+const { urlencoded } = require("express");
 
 const router = express.Router();
 
@@ -36,6 +37,30 @@ router.put("/:phoneNo", [auth], async (req, res) => {
   data[0].email = req.body.email;
   data[0].PaymentName = req.body.paymentMethod;
 
+  user.updateRecord(data[0], req.params.phoneNo);
+  user.close();
+
+  res.send(data[0]);
+});
+
+router.put("/changePin/:phoneNo", [auth], async (req, res) => {
+  const { error } = validateChangePin(req.body);
+  if (error) return res.status(400).send(error.message);
+
+  const user = new User(req.user.db);
+  let data = await user.getOne(req.params.phoneNo);
+
+  if (!data || data.length == 0) {
+    user.close();
+    return res.status(404).send("User does not exists.");
+  }
+
+  if (data[0].pin != req.body.oldPin) {
+    user.close();
+    return res.status(400).send("Incorrect pin provided");
+  }
+
+  data[0].pin = req.body.newPin;
   user.updateRecord(data[0], req.params.phoneNo);
   user.close();
 

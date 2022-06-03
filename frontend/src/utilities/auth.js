@@ -5,7 +5,7 @@ import DataProvider from "./DataProvider";
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("x-auth-token"));
 
   const login = async (user) => {
     const provider = new DataProvider();

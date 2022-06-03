@@ -3,7 +3,7 @@ import axios from "axios";
 export default class DataProvider {
   #url = "http://localhost:5000/api";
 
-  async get(route, params = "", headers = {}) {
+  async get(route, headers = {}, params = "") {
     try {
       const url = `${this.#url}/${route}/${params}`;
       const response = await axios.get(url, { headers: headers });
@@ -13,7 +13,7 @@ export default class DataProvider {
     }
   }
 
-  async post(route, payload, params = "", headers = {}) {
+  async post(route, payload, headers = {}, params = "") {
     try {
       const url = `${this.#url}/${route}/${params}`;
       const response = await axios.post(url, payload, { headers: headers });
@@ -23,7 +23,7 @@ export default class DataProvider {
     }
   }
 
-  async update(route, payload, params = "", headers = {}) {
+  async update(route, payload, headers = {}, params = "") {
     try {
       const url = `${this.#url}/${route}/${params}`;
       const response = await axios.put(url, payload, { headers: headers });

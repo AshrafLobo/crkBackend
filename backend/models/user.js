@@ -39,10 +39,10 @@ function validate(data) {
       .required()
       .messages({
         "string.pattern.base":
-          "{{#label}} should be a valid 12 digit phone number",
+          "Phone number should be a valid 12 digit phone number",
       }),
     pin: Joi.string().pattern(new RegExp("^[0-9]{4}$")).required().messages({
-      "string.pattern.base": "{{#label}} should be a valid 4 digit number",
+      "string.pattern.base": "Pin should be a valid 4 digit number",
     }),
     db: Joi.string().required(),
   });
@@ -59,7 +59,7 @@ function validateUser(data) {
       .required()
       .messages({
         "string.pattern.base":
-          "{{#label}} should be a valid 12 digit phone number",
+          "Phone number should be a valid 12 digit phone number",
       }),
     email: Joi.string().email(),
     paymentMethod: Joi.string().required(),
@@ -68,6 +68,24 @@ function validateUser(data) {
   return schema.validate(data);
 }
 
+/** Validate change pin */
+function validateChangePin(data) {
+  const schema = Joi.object({
+    oldPin: Joi.string().pattern(new RegExp("^[0-9]{4}$")).required().messages({
+      "string.pattern.base": "Old pin should be a valid 4 digit number",
+    }),
+    newPin: Joi.string().pattern(new RegExp("^[0-9]{4}$")).required().messages({
+      "string.pattern.base": "New pin should be a valid 4 digit number",
+    }),
+    confirmPin: Joi.any().valid(Joi.ref("newPin")).required().messages({
+      "any.only": "Pins must match",
+    }),
+  });
+
+  return schema.validate(data);
+}
+
 exports.User = User;
 exports.validate = validate;
 exports.validateUser = validateUser;
+exports.validateChangePin = validateChangePin;
