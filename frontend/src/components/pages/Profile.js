@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
+import { Card, Row } from "react-bootstrap";
 
-import ProfileEditForm from "../forms/ProfileEditForm";
 import { useAuth } from "../../utilities/auth";
-import DataProvider from "../../utilities/DataProvider";
 import ChangePinForm from "../forms/ChangePinForm";
+import DataProvider from "../../utilities/DataProvider";
+import Modal from "../reusable/Modal";
+import ProfileEditForm from "../forms/ProfileEditForm";
 
 function Profile(props) {
+  /** Authentication */
   const auth = useAuth();
   const provider = new DataProvider();
   const { phoneNo: PhoneNumber } = jwt_decode(auth.token);
 
-  const [disabled, setDisabled] = useState(true);
+  /**Change pin modal */
   const [show, setShow] = useState(false);
-  const [user, setUser] = useState({});
+  const [disabled, setDisabled] = useState(true);
 
+  /** Set user data */
+  const [user, setUser] = useState({});
   useEffect(() => {
     (async () => {
+      /** Get user data */
       const { data } = await provider.get(
         "user",
         {
@@ -25,6 +31,7 @@ function Profile(props) {
         PhoneNumber
       );
 
+      /** Initialize data */
       let {
         full_name = "N/A",
         phoneNo = "N/A",
@@ -32,8 +39,10 @@ function Profile(props) {
         email = "N/A",
       } = data;
 
-      if (!PaymentName) PaymentName = "Cheque";
+      /** If Payment name is not set */
+      if (!PaymentName) PaymentName = "";
 
+      /** Set user state */
       setUser({
         name: full_name,
         phoneNo: phoneNo,
@@ -43,10 +52,12 @@ function Profile(props) {
     })();
   }, []);
 
+  /** Edit user data */
   const handleEdit = () => {
     setDisabled(!disabled);
   };
 
+  /** Update editted data */
   const handleSaveEdit = async (value) => {
     await provider.update(
       "user",
@@ -59,6 +70,7 @@ function Profile(props) {
     setDisabled(true);
   };
 
+  /** Handle change pin clicked */
   const handleChangePin = async (value) => {
     await provider.update(
       "user/changePin",
@@ -71,25 +83,34 @@ function Profile(props) {
     setShow(false);
   };
 
-  const handleShow = () => {
-    setShow(!show);
-  };
-
-  const handleClose = () => {
-    setShow(false);
-  };
-
   return (
     <>
-      <ProfileEditForm
-        disabled={disabled}
-        user={user}
-        clickHandlers={{ handleEdit, handleSaveEdit, handleShow }}
-      />
-      <ChangePinForm
-        show={show}
-        clickHandlers={{ handleClose, handleChangePin }}
-      />
+      <Card>
+        <Card.Header className="row m-0">
+          <h5 className="col-xs-12 col-lg-6">User Details</h5>
+          <Row className="col-xs-12 col-lg-6 m-0">
+            <button className="col" onClick={() => setShow(!show)}>
+              <i className="bi bi-lock-fill me-1"></i>
+              Change Pin
+            </button>
+            <button className="col" onClick={handleEdit}>
+              <i className="bi bi-pencil-square me-1"></i>
+              Edit
+            </button>
+          </Row>
+        </Card.Header>
+        <Card.Body>
+          <ProfileEditForm
+            disabled={disabled}
+            user={user}
+            handleSaveEdit={handleSaveEdit}
+          />
+        </Card.Body>
+      </Card>
+
+      <Modal show={show} setShow={setShow} title="Change pin">
+        <ChangePinForm handleChangePin={handleChangePin} />
+      </Modal>
     </>
   );
 }

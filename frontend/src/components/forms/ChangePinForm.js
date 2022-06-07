@@ -1,14 +1,11 @@
-import { Formik, Form } from "formik";
 import React from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 import FormikControl from "./form-controls/FormikControl";
 
-function ChangePinForm({
-  show,
-  clickHandlers: { handleClose, handleChangePin },
-}) {
+function ChangePinForm({ show, handleChangePin }) {
   const initialValues = {
     oldPin: "",
     newPin: "",
@@ -32,51 +29,44 @@ function ChangePinForm({
   };
 
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Change Pin</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={onSubmit}
-        >
-          {(formik) => {
-            return (
-              <Form>
-                <FormikControl
-                  control="input"
-                  type="password"
-                  label="Enter Old Pin"
-                  name="oldPin"
-                />
-                <FormikControl
-                  control="input"
-                  type="password"
-                  label="Enter New Pin"
-                  name="newPin"
-                />
-                <FormikControl
-                  control="input"
-                  type="password"
-                  label="Confirm Pin"
-                  name="confirmPin"
-                />
-                <Button
-                  className="float-end my-1"
-                  type="submit"
-                  variant="outline-primary"
-                  disabled={!formik.isValid}
-                >
-                  Submit
-                </Button>
-              </Form>
-            );
-          }}
-        </Formik>
-      </Modal.Body>
-    </Modal>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={onSubmit}
+    >
+      {(formik) => {
+        return (
+          <Form>
+            <FormikControl
+              control="input"
+              type="password"
+              label="Enter Old Pin"
+              name="oldPin"
+            />
+            <FormikControl
+              control="input"
+              type="password"
+              label="Enter New Pin"
+              name="newPin"
+            />
+            <FormikControl
+              control="input"
+              type="password"
+              label="Confirm Pin"
+              name="confirmPin"
+            />
+            <Button
+              className="float-end my-1"
+              type="submit"
+              variant="outline-primary"
+              disabled={!formik.isValid}
+            >
+              Submit
+            </Button>
+          </Form>
+        );
+      }}
+    </Formik>
   );
 }
 

@@ -1,4 +1,5 @@
 import Agendas from "./Agendas";
 import Downloads from "./Downloads";
+import Modal from "./Modal";
 
-export { Agendas, Downloads };
+export { Agendas, Downloads, Modal };
