@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 
-import DataProvider from "../../utilities/DataProvider";
-import { useAuth } from "../../utilities/auth";
+import { useAuth, DataProvider } from "../../utilities";
 import { Agendas, Downloads } from "../reusable";
 
 function Agm(props) {

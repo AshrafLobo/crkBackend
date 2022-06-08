@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Col, Container } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { useAuth } from "../../utilities/auth";
-import DataProvider from "../../utilities/DataProvider";
-import LoginForm from "../forms/LoginForm";
+import { useAuth, DataProvider } from "../../utilities";
+import { LoginForm } from "../forms";
 
 function Login(props) {
   /** Authentication */

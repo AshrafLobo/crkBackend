@@ -3,7 +3,7 @@ import useBreakpoint from "bootstrap-5-breakpoint-react-hook";
 
 import SideNav from "./SideNav";
 import OffCanvas from "./OffCanvas";
-import checkScreenSize from "../../utilities/checkScreenSize";
+import { checkScreenSize } from "../../utilities";
 
 function Navbar(props) {
   const [nav, setNav] = useState(null);

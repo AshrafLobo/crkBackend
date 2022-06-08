@@ -2,8 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 import { Home, Profile, NoMatch, Login, Agm, Faq } from "./components/pages";
-import { AuthProvider } from "./utilities/auth";
-import RequireAuth from "./utilities/RequireAuth";
+import { AuthProvider, RequireAuth } from "./utilities";
 
 import "./App.scss";
 

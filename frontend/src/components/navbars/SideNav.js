@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 import styles from "./SideNav.module.scss";
 import { navigationData } from "./navigationData";
-import { useAuth } from "../../utilities/auth";
+import { useAuth } from "../../utilities";
 
 function SideNav(props) {
   const auth = useAuth();

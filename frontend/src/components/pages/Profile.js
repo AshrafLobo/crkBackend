@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
 import { Card, Row } from "react-bootstrap";
 
-import { useAuth } from "../../utilities/auth";
-import ChangePinForm from "../forms/ChangePinForm";
-import DataProvider from "../../utilities/DataProvider";
-import Modal from "../reusable/Modal";
-import ProfileEditForm from "../forms/ProfileEditForm";
+import { useAuth, DataProvider } from "../../utilities";
+import { Modal } from "../reusable";
+import { ChangePinForm, ProfileEditForm } from "../forms";
 
 function Profile(props) {
   /** Authentication */

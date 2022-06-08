@@ -4,10 +4,9 @@ import { NavLink, useNavigate } from "react-router-dom";
 import useBreakpoint from "bootstrap-5-breakpoint-react-hook";
 
 import { navigationData } from "./navigationData";
-import checkScreenSize from "../../utilities/checkScreenSize";
+import { useAuth, checkScreenSize } from "../../utilities";
 
 import styles from "./OffCanvas.module.scss";
-import { useAuth } from "../../utilities/auth";
 
 function OffCanvas(props) {
   const auth = useAuth();
