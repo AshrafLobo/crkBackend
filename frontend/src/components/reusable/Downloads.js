@@ -6,7 +6,7 @@ function Downloads({ downloads }) {
     <Card>
       <Card.Header>Access resources</Card.Header>
       <Card.Body>
-        <Table striped bordered hover size="sm">
+        <Table striped bordered hover responsive>
           <thead>
             <tr>
               <th>#</th>

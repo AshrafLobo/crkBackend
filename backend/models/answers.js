@@ -11,8 +11,8 @@ class Answers extends DbService {
     super.connect();
   }
 
-  async getOne(id) {
-    return await super.getOne(id);
+  async getOne(agenda_no) {
+    return await super.getOne(agenda_no, "agenda_no");
   }
 
   async getAll() {
@@ -30,15 +30,4 @@ class Answers extends DbService {
   }
 }
 
-/** Validate login credentials */
-function validate(data) {
-  const schema = Joi.object({
-    agenda_no: Joi.number().required(),
-    answer: Joi.string().required(),
-  });
-
-  return schema.validate(data);
-}
-
 exports.Answers = Answers;
-exports.validate = validate;

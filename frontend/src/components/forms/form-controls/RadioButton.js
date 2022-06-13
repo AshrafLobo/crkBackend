@@ -17,13 +17,13 @@ function RadioButton(props) {
               <React.Fragment key={option.key}>
                 <Form.Check.Input
                   type="radio"
-                  className="mx-1"
+                  className="me-1"
                   id={option.value}
                   {...field}
                   value={option.value}
                   checked={field.value === option.value}
                 />
-                <Form.Check.Label htmlFor={option.value} className="me-1">
+                <Form.Check.Label htmlFor={option.value} className="me-2">
                   {option.key}
                 </Form.Check.Label>
               </React.Fragment>

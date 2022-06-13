@@ -56,10 +56,10 @@ function Profile(props) {
   };
 
   /** Update editted data */
-  const handleSaveEdit = async (value) => {
+  const handleSaveEdit = async (values) => {
     await provider.update(
       "user",
-      value,
+      values,
       {
         "x-auth-token": auth.token,
       },
@@ -69,10 +69,10 @@ function Profile(props) {
   };
 
   /** Handle change pin clicked */
-  const handleChangePin = async (value) => {
+  const handleChangePin = async (values) => {
     await provider.update(
       "user/changePin",
-      value,
+      values,
       {
         "x-auth-token": auth.token,
       },

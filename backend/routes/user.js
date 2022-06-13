@@ -17,7 +17,16 @@ router.get("/:phoneNo", [auth], async (req, res) => {
       .status(404)
       .send(`The user with the number ${req.params.phoneNo} does not exist`);
 
-  res.send(_.pick(data[0], ["phoneNo", "full_name", "PaymentName", "email"]));
+  res.send(
+    _.pick(data[0], [
+      "MemberNo",
+      "phoneNo",
+      "full_name",
+      "PaymentName",
+      "email",
+      "shares",
+    ])
+  );
 });
 
 router.put("/:phoneNo", [auth], async (req, res) => {
