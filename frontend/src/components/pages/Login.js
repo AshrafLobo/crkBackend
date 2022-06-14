@@ -3,7 +3,7 @@ import { Col, Container } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useAuth, DataProvider } from "../../utilities";
-import { LoginForm } from "../forms";
+import { LoginForm } from "../forms/login";
 
 function Login(props) {
   /** Authentication */
