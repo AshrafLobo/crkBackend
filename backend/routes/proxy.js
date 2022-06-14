@@ -12,14 +12,11 @@ router.post("/", [auth], async (req, res) => {
 
   const proxy = new Proxy(req.user.db);
 
-  let data = await proxy.getOne(req.body.phoneNo);
+  let data = await proxy.getOne(req.body.users_MemberNo);
   if (data && data.length > 0)
     return res.status(400).send("Proxy already exists.");
 
-  data = await proxy.createRecord({
-    ...req.body,
-    users_MemberNo: req.user.MemberNo,
-  });
+  data = await proxy.createRecord(req.body);
   proxy.close();
 
   if (!data.insertId) return res.status(500).send(data.message);
@@ -27,7 +24,6 @@ router.post("/", [auth], async (req, res) => {
   res.send({
     id: data.insertId,
     ...req.body,
-    users_MemberNo: req.user.MemberNo,
   });
 });
 

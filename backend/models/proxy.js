@@ -15,8 +15,8 @@ class Proxy extends DbService {
     super.connect();
   }
 
-  async getOne(phoneNo) {
-    return await super.getOne(phoneNo, "phoneNo");
+  async getOne(users_MemberNo) {
+    return await super.getOne(users_MemberNo, "users_MemberNo");
   }
 
   async createRecord(data) {
@@ -50,6 +50,7 @@ class Proxy extends DbService {
 
 function validate(data) {
   const schema = Joi.object({
+    users_MemberNo: Joi.number().required(),
     phoneNo: Joi.string()
       .pattern(new RegExp("^[0-9]{12}$"))
       .required()
@@ -57,9 +58,9 @@ function validate(data) {
         "string.pattern.base":
           "{{#label}} should be a valid 12 digit phone number",
       }),
+    email: Joi.string().email(),
     full_name: Joi.string().required(),
     ID_RegCert_No: Joi.string().max(8).pattern(new RegExp("[0-9]+")).required(),
-    language: Joi.string().valid("English", "Kiswahili").required(),
   });
 
   return schema.validate(data);
