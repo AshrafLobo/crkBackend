@@ -25,7 +25,7 @@ class User extends DbService {
   /** Generate a jwt token for logged in user */
   generateToken(data) {
     return jwt.sign(
-      _.pick(data, ["id", "phoneNo", "db"]),
+      _.pick(data, ["id", "phoneNo", "db", "isProxy"]),
       config.get("jwtPrivateKey")
     );
   }
@@ -44,6 +44,28 @@ function validate(data) {
     pin: Joi.string().pattern(new RegExp("^[0-9]{4}$")).required().messages({
       "string.pattern.base": "Pin should be a valid 4 digit number",
     }),
+    db: Joi.string().required(),
+  });
+
+  return schema.validate(data);
+}
+
+/** Validate check pin */
+function validateCheckPin(data) {
+  const schema = Joi.object({
+    phoneNo: Joi.string()
+      .pattern(new RegExp("^[0-9]{12}$"))
+      .required()
+      .messages({
+        "string.pattern.base":
+          "Phone number should be a valid 12 digit phone number",
+      }),
+    pin: Joi.string()
+      .allow(null, "")
+      .pattern(new RegExp("^[0-9]{4}$"))
+      .messages({
+        "string.pattern.base": "Pin should be a valid 4 digit number",
+      }),
     db: Joi.string().required(),
   });
 
@@ -87,5 +109,6 @@ function validateChangePin(data) {
 
 exports.User = User;
 exports.validate = validate;
+exports.validateCheckPin = validateCheckPin;
 exports.validateUser = validateUser;
 exports.validateChangePin = validateChangePin;

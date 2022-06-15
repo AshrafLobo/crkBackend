@@ -12,7 +12,7 @@ router.post("/", [auth], async (req, res) => {
 
   const proxy = new Proxy(req.user.db);
 
-  let data = await proxy.getOne(req.body.users_MemberNo);
+  let data = await proxy.getProxy(req.body.users_MemberNo);
   if (data && data.length > 0)
     return res.status(400).send("Proxy already exists.");
 

@@ -15,7 +15,11 @@ class Proxy extends DbService {
     super.connect();
   }
 
-  async getOne(users_MemberNo) {
+  async getOne(phoneNo) {
+    return await super.getOne(phoneNo, "phoneNo");
+  }
+
+  async getProxy(users_MemberNo) {
     return await super.getOne(users_MemberNo, "users_MemberNo");
   }
 

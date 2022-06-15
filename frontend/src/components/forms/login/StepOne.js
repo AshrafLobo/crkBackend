@@ -13,7 +13,7 @@ function StepOne({ data, next, options }) {
       .required("Required"),
   });
 
-  const onSubmit = (values) => {
+  const onSubmit = async (values) => {
     next(values);
   };
 
