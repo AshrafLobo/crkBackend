@@ -1,58 +1,63 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Button } from "react-bootstrap";
 
-import { Code } from "./";
 import FormikControl from "../form-controls/FormikControl";
 import { DataProvider } from "../../../utilities";
 
-function StepTwo({ data: currentData, next, prev }) {
-  const [hasPin, setHasPin] = useState(true);
-  const [isProxy, setIsProxy] = useState(true);
+function Code({ data: { phoneNo, db }, prev }) {
   const provider = new DataProvider();
+  const [validated, setValidated] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      const { data } = await provider.post("auth/checkPin", currentData);
-
-      if (data) {
-        setIsProxy(data.isProxy);
-        setHasPin(data.hasPin);
-      }
-    })();
-  }, []);
+  const initialValues = {
+    phoneNo,
+    db,
+    code: "",
+  };
 
   const validationSchema = Yup.object({
-    pin: Yup.string()
-      .matches(/^[0-9]{4}$/, "Value should be a valid 4 digit pin")
+    code: Yup.string()
+      .matches(/^[0-9A-Z]{4}$/, "Value should be a valid 4 digit code")
       .required("Required"),
   });
 
-  const onSubmit = (values, { setErrors }) => {
-    next(values, true, setErrors);
+  const onSubmit = async (values, { setErrors }) => {
+    const { status, data } = await provider.post("proxy/validate", values);
+
+    if (status === 400) {
+      /** Set a formik error */
+      setErrors({
+        phoneNo: data,
+        code: data,
+      });
+
+      return;
+    }
+
+    setValidated(true);
   };
 
   return (
     <Formik
-      initialValues={currentData}
+      initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={onSubmit}
     >
-      {({ values, isValid }) => {
+      {({ isValid }) => {
         let currentComponent = (
           <Form className="h-100">
             <FormikControl
               control="input"
               type="password"
-              label="Pin"
-              name="pin"
+              label="Please enter code"
+              name="code"
             />
             <Button
               className="float-start my-1"
               type="button"
               variant="outline-primary"
-              onClick={() => prev(values)}
+              onClick={() => prev()}
             >
               Prev
             </Button>
@@ -67,7 +72,7 @@ function StepTwo({ data: currentData, next, prev }) {
           </Form>
         );
 
-        if (!hasPin && !isProxy) {
+        if (validated) {
           currentComponent = (
             <div>
               <h5 className="text-center">First time login</h5>
@@ -78,16 +83,12 @@ function StepTwo({ data: currentData, next, prev }) {
                 className="float-end my-1"
                 type="button"
                 variant="outline-primary"
-                onClick={() => prev(values)}
+                onClick={() => prev()}
               >
                 Prev
               </Button>
             </div>
           );
-        }
-
-        if (!hasPin && isProxy) {
-          currentComponent = <Code prev={prev} data={currentData} />;
         }
 
         return currentComponent;
@@ -96,4 +97,4 @@ function StepTwo({ data: currentData, next, prev }) {
   );
 }
 
-export default StepTwo;
+export default Code;

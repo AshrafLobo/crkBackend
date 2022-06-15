@@ -13,6 +13,7 @@ router.post("/checkPin", async (req, res) => {
   let data = await user.getOne(req.body.phoneNo);
   user.close();
 
+  let isProxy = false;
   let hasPin = true;
 
   /** Check if user is a proxy */
@@ -23,12 +24,14 @@ router.post("/checkPin", async (req, res) => {
 
     if (!data || data.length == 0)
       return res.status(400).send("User does not exist");
+
+    isProxy = true;
   }
 
   /** Return true if pin has not been set */
   if (!data[0].pin) hasPin = false;
 
-  res.send(hasPin);
+  res.send({ hasPin, isProxy });
 });
 
 /** Login route */

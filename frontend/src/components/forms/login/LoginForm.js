@@ -22,7 +22,7 @@ function LoginForm({ handleLogin, options }) {
     setCurrentStep((prev) => prev + 1);
   };
 
-  const handlePrevStep = (newData) => {
+  const handlePrevStep = (newData = {}) => {
     setData((prev) => ({ ...prev, ...newData }));
     setCurrentStep((prev) => prev - 1);
   };

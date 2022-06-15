@@ -28,11 +28,11 @@ router.post("/", [auth], async (req, res) => {
 });
 
 /** Route for proxy login */
-router.post("/validate", [auth], async (req, res) => {
+router.post("/validate", async (req, res) => {
   const { error } = validateCode(req.body);
   if (error) return res.status(400).send(error.message);
 
-  const proxy = new Proxy(req.user.db);
+  const proxy = new Proxy(req.body.db);
   let data = await proxy.getOne(req.body.phoneNo);
 
   if (!data || data.length == 0)

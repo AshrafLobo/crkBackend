@@ -85,6 +85,7 @@ function validateCode(data) {
       .messages({
         "string.pattern.base": "{{#label}} should be a valid 4 digit code",
       }),
+    db: Joi.string().required(),
   });
 
   return schema.validate(data);

@@ -42,7 +42,7 @@ function Login(props) {
     })();
   }, []);
 
-  const handleLogin = async (values, setError) => {
+  const handleLogin = async (values, setErrors) => {
     /** Check if login values are set */
     if (Object.keys(values).length > 0) {
       const { status, data } = await auth.login(values);
@@ -50,7 +50,7 @@ function Login(props) {
       /** If incorrect values submitted */
       if (status === 400) {
         /** Set a formik error */
-        setError({
+        setErrors({
           phoneNo: data,
           pin: data,
         });
