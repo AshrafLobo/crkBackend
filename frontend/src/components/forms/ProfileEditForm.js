@@ -11,6 +11,7 @@ function ProfileEditForm(props) {
     disabled,
     user: { name = "", phoneNo = "", paymentMethod = "", email = "" },
     handleSaveEdit,
+    isProxy,
   } = props;
 
   /** Select options */
@@ -42,10 +43,11 @@ function ProfileEditForm(props) {
       .matches(/^254[0-9]{9}$/, "Value should be a valid 12 digit phone number")
       .required("Required"),
     email: Yup.string().email(),
-    paymentMethod: Yup.string().oneOf(["Cheque", "Mpesa"]).required(),
+    paymentMethod: Yup.string().oneOf(["Cheque", "Mpesa"]),
   });
 
   const onSubmit = (values) => {
+    if (isProxy) delete values["paymentMethod"];
     handleSaveEdit(values);
   };
 
@@ -80,13 +82,15 @@ function ProfileEditForm(props) {
               name="email"
               disabled={disabled}
             />
-            <FormikControl
-              control="select"
-              label="Payment method"
-              name="paymentMethod"
-              disabled={disabled}
-              options={options}
-            />
+            {!isProxy && (
+              <FormikControl
+                control="select"
+                label="Payment method"
+                name="paymentMethod"
+                disabled={disabled}
+                options={options}
+              />
+            )}
 
             {!disabled && (
               <Button

@@ -5,7 +5,7 @@ import * as Yup from "yup";
 
 import FormikControl from "./form-controls/FormikControl";
 
-function ChangePinForm({ show, handleChangePin }) {
+function ChangePinForm({ handleChangePin }) {
   const initialValues = {
     oldPin: "",
     newPin: "",

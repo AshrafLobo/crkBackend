@@ -70,6 +70,23 @@ function validate(data) {
   return schema.validate(data);
 }
 
+/** Validate proxy details */
+function validateProxy(data) {
+  const schema = Joi.object({
+    name: Joi.string().required(),
+    phoneNo: Joi.string()
+      .pattern(new RegExp("^[0-9]{12}$"))
+      .required()
+      .messages({
+        "string.pattern.base":
+          "Phone number should be a valid 12 digit phone number",
+      }),
+    email: Joi.string().email(),
+  });
+
+  return schema.validate(data);
+}
+
 function validateCode(data) {
   const schema = Joi.object({
     phoneNo: Joi.string()
@@ -91,6 +108,25 @@ function validateCode(data) {
   return schema.validate(data);
 }
 
+/** Validate change pin */
+function validateChangePin(data) {
+  const schema = Joi.object({
+    oldPin: Joi.string().pattern(new RegExp("^[0-9]{4}$")).required().messages({
+      "string.pattern.base": "Old pin should be a valid 4 digit number",
+    }),
+    newPin: Joi.string().pattern(new RegExp("^[0-9]{4}$")).required().messages({
+      "string.pattern.base": "New pin should be a valid 4 digit number",
+    }),
+    confirmPin: Joi.any().valid(Joi.ref("newPin")).required().messages({
+      "any.only": "Pins must match",
+    }),
+  });
+
+  return schema.validate(data);
+}
+
 exports.Proxy = Proxy;
 exports.validate = validate;
+exports.validateProxy = validateProxy;
 exports.validateCode = validateCode;
+exports.validateChangePin = validateChangePin;

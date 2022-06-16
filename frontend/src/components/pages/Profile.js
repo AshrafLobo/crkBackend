@@ -10,7 +10,7 @@ function Profile(props) {
   /** Authentication */
   const auth = useAuth();
   const provider = new DataProvider();
-  const { phoneNo: PhoneNumber } = jwt_decode(auth.token);
+  const { phoneNo: PhoneNumber, isProxy } = jwt_decode(auth.token);
 
   /**Change pin modal */
   const [show, setShow] = useState(false);
@@ -20,9 +20,13 @@ function Profile(props) {
   const [user, setUser] = useState({});
   useEffect(() => {
     (async () => {
+      let url = "user";
+
+      if (isProxy) url = "proxy";
+
       /** Get user data */
       const { data } = await provider.get(
-        "user",
+        url,
         {
           "x-auth-token": auth.token,
         },
@@ -57,28 +61,37 @@ function Profile(props) {
 
   /** Update editted data */
   const handleSaveEdit = async (values) => {
+    setDisabled(true);
+
+    let url = "user";
+    if (isProxy) url = "proxy";
+
     await provider.update(
-      "user",
+      url,
       values,
       {
         "x-auth-token": auth.token,
       },
       PhoneNumber
     );
-    setDisabled(true);
   };
 
   /** Handle change pin clicked */
   const handleChangePin = async (values) => {
+    setShow(false);
+
+    let url = "user";
+
+    if (isProxy) url = "proxy";
+
     await provider.update(
-      "user/changePin",
+      `${url}/changePin`,
       values,
       {
         "x-auth-token": auth.token,
       },
       PhoneNumber
     );
-    setShow(false);
   };
 
   return (
@@ -102,6 +115,7 @@ function Profile(props) {
             disabled={disabled}
             user={user}
             handleSaveEdit={handleSaveEdit}
+            isProxy={isProxy}
           />
         </Card.Body>
       </Card>
