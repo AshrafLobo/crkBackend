@@ -16,13 +16,9 @@ function Agendas({ agendas }) {
   const [votingForm, setVotingForm] = useState(null);
 
   const getOptions = async (agenda_no) => {
-    const { data } = await provider.get(
-      "answers",
-      {
-        "x-auth-token": auth.token,
-      },
-      agenda_no
-    );
+    const { data } = await provider.get(`answers/${agenda_no}`, {
+      "x-auth-token": auth.token,
+    });
 
     const options = [];
 

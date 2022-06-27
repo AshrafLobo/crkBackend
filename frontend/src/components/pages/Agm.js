@@ -4,7 +4,7 @@ import jwt_decode from "jwt-decode";
 
 import { useAuth, DataProvider } from "../../utilities";
 import { CreateProxyForm } from "../forms";
-import { Agendas, Downloads, Modal } from "../reusable";
+import { Agendas, Resources, Modal } from "../reusable";
 
 function Agm(props) {
   const auth = useAuth();
@@ -19,13 +19,9 @@ function Agm(props) {
     /** Get user data */
     const {
       data: { MemberNo: users_MemberNo },
-    } = await provider.get(
-      "user",
-      {
-        "x-auth-token": auth.token,
-      },
-      PhoneNumber
-    );
+    } = await provider.get(`user/${PhoneNumber}`, {
+      "x-auth-token": auth.token,
+    });
 
     /** Create payload */
     const payload = {
@@ -36,7 +32,6 @@ function Agm(props) {
       ID_RegCert_No,
     };
 
-    // console.log("Payload", JSON.stringify(payload));
     await provider.post("proxy", payload, {
       "x-auth-token": auth.token,
     });
@@ -52,13 +47,13 @@ function Agm(props) {
     })();
   }, []);
 
-  const [downloads, setDownloads] = useState([]);
+  const [resources, setResources] = useState([]);
   useEffect(() => {
     (async () => {
-      const { data } = await provider.get("downloads", {
+      const { data } = await provider.get("resources", {
         "x-auth-token": auth.token,
       });
-      setDownloads(data);
+      setResources(data);
     })();
   }, []);
 
@@ -79,7 +74,7 @@ function Agm(props) {
         </Col>
 
         <Col xs={12} lg={6} className="my-2">
-          <Downloads downloads={downloads} />
+          <Resources resources={resources} />
         </Col>
       </Row>
 

@@ -2,7 +2,7 @@
 const DbService = require("../dbService");
 
 /** Downloads model */
-class Downloads extends DbService {
+class Resources extends DbService {
   /** Set database and table name */
   constructor(database) {
     super(database, "downloads");
@@ -18,4 +18,4 @@ class Downloads extends DbService {
   }
 }
 
-module.exports = Downloads;
+module.exports = Resources;

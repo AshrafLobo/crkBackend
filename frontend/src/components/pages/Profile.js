@@ -25,13 +25,9 @@ function Profile(props) {
       if (isProxy) url = "proxy";
 
       /** Get user data */
-      const { data } = await provider.get(
-        url,
-        {
-          "x-auth-token": auth.token,
-        },
-        PhoneNumber
-      );
+      const { data } = await provider.get(`${url}/${PhoneNumber}`, {
+        "x-auth-token": auth.token,
+      });
 
       /** Initialize data */
       let {
@@ -66,14 +62,9 @@ function Profile(props) {
     let url = "user";
     if (isProxy) url = "proxy";
 
-    await provider.update(
-      url,
-      values,
-      {
-        "x-auth-token": auth.token,
-      },
-      PhoneNumber
-    );
+    await provider.update(`${url}/${PhoneNumber}`, values, {
+      "x-auth-token": auth.token,
+    });
   };
 
   /** Handle change pin clicked */
