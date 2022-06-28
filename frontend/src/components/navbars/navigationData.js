@@ -1,13 +1,13 @@
 export const navigationData = [
   {
-    title: "Profile",
-    link: "profile",
-    icon: "bi-person-fill",
-  },
-  {
     title: "Agm",
     link: "agm",
     icon: "bi-camera-video-fill",
+  },
+  {
+    title: "Profile",
+    link: "profile",
+    icon: "bi-person-fill",
   },
   {
     title: "FAQS",

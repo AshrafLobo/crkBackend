@@ -4,7 +4,7 @@ import jwt_decode from "jwt-decode";
 
 import { useAuth, DataProvider } from "../../utilities";
 import { CreateProxyForm } from "../forms";
-import { Agendas, Resources, Modal } from "../reusable";
+import { Agendas, Resources, Modal, Video } from "../reusable";
 
 function Agm(props) {
   const auth = useAuth();
@@ -66,6 +66,10 @@ function Agm(props) {
         >
           Create proxy
         </button>
+      </Row>
+
+      <Row className="m-4">
+        <Video />
       </Row>
 
       <Row className="m-3">

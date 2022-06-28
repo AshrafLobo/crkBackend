@@ -18,7 +18,7 @@ function App() {
             </RequireAuth>
           }
         >
-          <Route index element={<Profile />} />
+          <Route index element={<Agm />} />
           <Route path="profile" element={<Profile />} />
           <Route path="agm" element={<Agm />} />
           <Route path="faqs" element={<Faq />} />
