@@ -8,8 +8,8 @@ import FormikControl from "../form-controls/FormikControl";
 import { DataProvider } from "../../../utilities";
 
 function StepTwo({ data: currentData, next, prev }) {
-  const [hasPin, setHasPin] = useState(true);
-  const [isProxy, setIsProxy] = useState(true);
+  const [hasPin, setHasPin] = useState(null);
+  const [isProxy, setIsProxy] = useState(null);
   const provider = new DataProvider();
 
   useEffect(() => {
@@ -40,32 +40,7 @@ function StepTwo({ data: currentData, next, prev }) {
       onSubmit={onSubmit}
     >
       {({ values, isValid }) => {
-        let currentComponent = (
-          <Form className="h-100">
-            <FormikControl
-              control="input"
-              type="password"
-              label="Pin"
-              name="pin"
-            />
-            <Button
-              className="float-start my-1"
-              type="button"
-              variant="outline-primary"
-              onClick={() => prev(values)}
-            >
-              Prev
-            </Button>
-            <Button
-              className="float-end my-1"
-              type="submit"
-              variant="outline-primary"
-              disabled={!isValid}
-            >
-              Submit
-            </Button>
-          </Form>
-        );
+        let currentComponent = null;
 
         if (!hasPin && !isProxy) {
           currentComponent = (
@@ -88,6 +63,35 @@ function StepTwo({ data: currentData, next, prev }) {
 
         if (!hasPin && isProxy) {
           currentComponent = <Code prev={prev} data={currentData} />;
+        }
+
+        if (hasPin) {
+          currentComponent = (
+            <Form className="h-100">
+              <FormikControl
+                control="input"
+                type="password"
+                label="Pin"
+                name="pin"
+              />
+              <Button
+                className="float-start my-1"
+                type="button"
+                variant="outline-primary"
+                onClick={() => prev(values)}
+              >
+                Prev
+              </Button>
+              <Button
+                className="float-end my-1"
+                type="submit"
+                variant="outline-primary"
+                disabled={!isValid}
+              >
+                Submit
+              </Button>
+            </Form>
+          );
         }
 
         return currentComponent;

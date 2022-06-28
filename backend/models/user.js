@@ -3,6 +3,7 @@ const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
 const config = require("config");
+var generator = require("generate-password");
 
 const DbService = require("../dbService");
 
@@ -28,6 +29,16 @@ class User extends DbService {
       _.pick(data, ["id", "phoneNo", "db", "isProxy"]),
       config.get("jwtPrivateKey")
     );
+  }
+
+  /** Generate a pin for a user */
+  generatePin() {
+    return generator.generate({
+      length: 4,
+      numbers: true,
+      uppercase: false,
+      lowercase: false,
+    });
   }
 }
 

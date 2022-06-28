@@ -11,7 +11,6 @@ router.post("/checkPin", async (req, res) => {
 
   const user = new User(req.body.db);
   let data = await user.getOne(req.body.phoneNo);
-  user.close();
 
   let isProxy = false;
   let hasPin = true;
@@ -31,6 +30,15 @@ router.post("/checkPin", async (req, res) => {
   /** Return true if pin has not been set */
   if (!data[0].pin) hasPin = false;
 
+  /** Generate pin if user is not a proxy */
+  if (!hasPin && !isProxy) {
+    const response = await user.updateRecord(
+      { pin: user.generatePin() },
+      data[0].phoneNo
+    );
+  }
+
+  user.close();
   res.send({ hasPin, isProxy });
 });
 

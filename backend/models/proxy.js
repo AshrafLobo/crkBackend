@@ -1,8 +1,5 @@
 /** Import statements */
 const Joi = require("joi");
-const jwt = require("jsonwebtoken");
-const _ = require("lodash");
-const config = require("config");
 var generator = require("generate-password");
 
 const DbService = require("../dbService");
