@@ -21,7 +21,7 @@ function CreateProxyForm({ handleCreateProxy }) {
     email: Yup.string().email(),
     idNumber: Yup.string()
       .matches(/^[0-9]+$/, "Value should be a valid id number")
-      .required(),
+      .required("Required"),
   });
 
   const onSubmit = (values) => {

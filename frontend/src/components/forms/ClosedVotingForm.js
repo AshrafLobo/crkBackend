@@ -11,7 +11,7 @@ function ClosedVotingForm({ question, handleVoting, options }) {
   };
 
   const validationSchema = Yup.object({
-    answer: Yup.string().required(),
+    answer: Yup.string().required("Required"),
   });
 
   const onSubmit = (values) => {
