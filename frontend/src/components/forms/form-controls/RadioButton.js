@@ -1,16 +1,20 @@
 import React from "react";
 import { Form } from "react-bootstrap";
 import { Field, ErrorMessage } from "formik";
+import { FormControl, FormLabel, FormControlLabel, RadioGroup, Radio } from "@mui/material";
 
 function RadioButton(props) {
   const { label, name, options, ...rest } = props;
 
   return (
-    <Form.Group className="mb-2">
-      <Form.Label className="d-block" htmlFor={name}>
+    <FormControl>
+      <FormLabel id='radio-group'>
         {label}
-      </Form.Label>
-      <Field id={name} name={name} {...rest}>
+      </FormLabel>
+    <RadioGroup name='radio-group' aria-labelledby='radio-group-label'>
+      <FormControlLabel control/>
+    </RadioGroup>
+      {/* <Field id={name} name={name} {...rest}>
         {({ field }) => {
           return options.map((option) => {
             return (
@@ -30,13 +34,8 @@ function RadioButton(props) {
             );
           });
         }}
-      </Field>
-      <ErrorMessage
-        className="d-block text-danger"
-        name={name}
-        component={Form.Text}
-      />
-    </Form.Group>
+      </Field> */}
+    </FormControl>
   );
 }
 

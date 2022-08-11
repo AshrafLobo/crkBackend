@@ -1,6 +1,7 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import { Stack } from "@mui/material";
 import { Button } from "react-bootstrap";
 
 import FormikControl from "../form-controls/FormikControl";
@@ -25,25 +26,27 @@ function StepOne({ data, next, options }) {
     >
       {(formik) => (
         <Form className="h-100">
-          <FormikControl
-            control="select"
-            label="Choose a company"
-            name="db"
-            options={options}
-          />
-          <FormikControl
-            control="input"
-            type="text"
-            label="Phone number"
-            name="phoneNo"
-          />
-          <Button
-            className="float-end my-1"
-            type="submit"
-            variant="outline-primary"
-          >
-            Next
-          </Button>
+          <Stack spacing={1}>
+            <FormikControl
+              control="select"
+              label="Choose a company"
+              name="db"
+              options={options}
+            />
+            <FormikControl
+              control="input"
+              type="text"
+              label="Phone number"
+              name="phoneNo"
+            />
+            <Button
+              className="float-end"
+              type="submit"
+              variant="outline-primary"
+            >
+              Next
+            </Button>
+          </Stack>
         </Form>
       )}
     </Formik>
