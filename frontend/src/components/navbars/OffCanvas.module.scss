@@ -1,9 +1,0 @@
-@import "navigation";
-
-.offcanvas {
-  @include navigation;
-
-  .navbar-toggler {
-    border-width: 0.5px;
-  }
-}

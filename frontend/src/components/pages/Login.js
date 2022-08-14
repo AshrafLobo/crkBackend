@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Col, Container } from "react-bootstrap";
+import { Box, Divider, Grid, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { useAuth, DataProvider } from "../../utilities";
@@ -51,7 +51,7 @@ function Login(props) {
       if (status === 400) {
         /** Set a formik error */
         setErrors({
-          phoneNo: data,
+          ID_RegCert_No: data,
           pin: data,
         });
       } else {
@@ -62,17 +62,26 @@ function Login(props) {
   };
 
   return (
-    <Container className="vh-100 row mx-auto p-0">
-      <Col
+    <Grid container justifyContent="center" alignContent="center" my={10}>
+      <Grid
+        item
         xs={11}
-        lg={6}
-        className="mx-auto p-4 py-md-2 py-lg-4 align-self-center border border-1 rounded"
+        md={6}
+        p={6}
+        sx={{
+          border: "1px solid #e0e0e0",
+          borderRadius: "10px",
+        }}
       >
-        <h2>Login</h2>
-        <hr />
+        <Typography variant="h4" textAlign="center">
+          Please fill in the details bellow
+        </Typography>
+        <Box my={4}>
+          <Divider light />
+        </Box>
         <LoginForm handleLogin={handleLogin} options={options} />
-      </Col>
-    </Container>
+      </Grid>
+    </Grid>
   );
 }
 

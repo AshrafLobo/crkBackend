@@ -12,8 +12,8 @@ class Proxy extends DbService {
     super.connect();
   }
 
-  async getOne(phoneNo) {
-    return await super.getOne(phoneNo, "phoneNo");
+  async getOne(ID_RegCert_No) {
+    return await super.getOne(ID_RegCert_No, "ID_RegCert_No");
   }
 
   async getProxy(users_MemberNo) {
@@ -34,8 +34,8 @@ class Proxy extends DbService {
     return await super.createRecord(data);
   }
 
-  async updateRecord(data, phoneNo) {
-    return await super.updateRecord(data, phoneNo, "phoneNo");
+  async updateRecord(data, ID_RegCert_No) {
+    return await super.updateRecord(data, ID_RegCert_No, "ID_RegCert_No");
   }
 
   /** Generate a pin for a verified proxy */
@@ -52,16 +52,9 @@ class Proxy extends DbService {
 function validate(data) {
   const schema = Joi.object({
     users_MemberNo: Joi.number().required(),
-    phoneNo: Joi.string()
-      .pattern(new RegExp("^[0-9]{12}$"))
-      .required()
-      .messages({
-        "string.pattern.base":
-          "{{#label}} should be a valid 12 digit phone number",
-      }),
     email: Joi.string().email(),
     full_name: Joi.string().required(),
-    ID_RegCert_No: Joi.string().max(8).pattern(new RegExp("[0-9]+")).required(),
+    ID_RegCert_No: Joi.string().required(),
   });
 
   return schema.validate(data);
@@ -71,13 +64,7 @@ function validate(data) {
 function validateProxy(data) {
   const schema = Joi.object({
     name: Joi.string().required(),
-    phoneNo: Joi.string()
-      .pattern(new RegExp("^[0-9]{12}$"))
-      .required()
-      .messages({
-        "string.pattern.base":
-          "Phone number should be a valid 12 digit phone number",
-      }),
+    ID_RegCert_No: Joi.string().required(),
     email: Joi.string().email(),
   });
 
@@ -86,13 +73,7 @@ function validateProxy(data) {
 
 function validateCode(data) {
   const schema = Joi.object({
-    phoneNo: Joi.string()
-      .pattern(new RegExp("^[0-9]{12}$"))
-      .required()
-      .messages({
-        "string.pattern.base":
-          "{{#label}} should be a valid 12 digit phone number",
-      }),
+    ID_RegCert_No: Joi.string().required(),
     code: Joi.string()
       .pattern(new RegExp("^[0-9A-Z]{4}$"))
       .required()

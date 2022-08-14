@@ -1,20 +1,17 @@
 import React from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Stack } from "@mui/material";
-import { Button } from "react-bootstrap";
+import { Stack, Button } from "@mui/material";
 
 import FormikControl from "../form-controls/FormikControl";
 
 function StepOne({ data, next, options }) {
   const validationSchema = Yup.object({
     db: Yup.string().required("Required"),
-    phoneNo: Yup.string()
-      .matches(/^254[0-9]{9}$/, "Value should be a valid 12 digit phone number")
-      .required("Required"),
+    ID_RegCert_No: Yup.string().required("Required"),
   });
 
-  const onSubmit = async (values) => {
+  const onSubmit = (values) => {
     next(values);
   };
 
@@ -25,8 +22,8 @@ function StepOne({ data, next, options }) {
       onSubmit={onSubmit}
     >
       {(formik) => (
-        <Form className="h-100">
-          <Stack spacing={1}>
+        <Form>
+          <Stack spacing={3}>
             <FormikControl
               control="select"
               label="Choose a company"
@@ -36,16 +33,14 @@ function StepOne({ data, next, options }) {
             <FormikControl
               control="input"
               type="text"
-              label="Phone number"
-              name="phoneNo"
+              label="ID Number/Passport Number"
+              name="ID_RegCert_No"
             />
-            <Button
-              className="float-end"
-              type="submit"
-              variant="outline-primary"
-            >
-              Next
-            </Button>
+            <Stack direction="row-reverse">
+              <Button type="submit" variant="contained">
+                Next
+              </Button>
+            </Stack>
           </Stack>
         </Form>
       )}

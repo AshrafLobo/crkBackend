@@ -1,18 +1,38 @@
+import { Close } from "@mui/icons-material";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  IconButton,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import React from "react";
-import { Modal as BootstrapModal } from "react-bootstrap";
 
-function Modal({ children, title, show, setShow }) {
-  const handleClose = () => {
-    setShow(false);
-  };
+function Modal({ title, body, open, setOpen }) {
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <BootstrapModal show={show} onHide={handleClose}>
-      <BootstrapModal.Header closeButton>
-        <BootstrapModal.Title>{title}</BootstrapModal.Title>
-      </BootstrapModal.Header>
-      <BootstrapModal.Body>{children}</BootstrapModal.Body>
-    </BootstrapModal>
+    <Dialog
+      open={open}
+      onClose={() => setOpen(false)}
+      aria-labelledby="dialog-title"
+      aria-describedby="dialog-description"
+      fullScreen={fullScreen}
+    >
+      <DialogTitle id="dialog-title" p={1}>
+        <Stack direction="row" justifyContent="space-between">
+          <Typography variant="div">{title}</Typography>
+          <IconButton onClick={() => setOpen(false)}>
+            <Close />
+          </IconButton>
+        </Stack>
+      </DialogTitle>
+      <DialogContent>{body}</DialogContent>
+    </Dialog>
   );
 }
 

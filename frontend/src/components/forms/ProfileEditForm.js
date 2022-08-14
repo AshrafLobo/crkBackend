@@ -1,7 +1,6 @@
 import React from "react";
-import { Button } from "react-bootstrap";
 import { Formik, Form } from "formik";
-import * as Yup from "yup";
+import { Stack } from "@mui/material";
 
 import FormikControl from "./form-controls/FormikControl";
 
@@ -9,99 +8,46 @@ function ProfileEditForm(props) {
   /** Destructured props */
   const {
     disabled,
-    user: { name = "", phoneNo = "", paymentMethod = "", email = "" },
-    handleSaveEdit,
+    user: { name = "", ID_RegCert_No = "", email = "" },
     isProxy,
   } = props;
 
-  /** Select options */
-  const options = [
-    {
-      key: "Select a payment method",
-      value: "",
-    },
-    {
-      key: "Cheque",
-      value: "Cheque",
-    },
-    {
-      key: "Mpesa",
-      value: "Mpesa",
-    },
-  ];
-
   const initialValues = {
     name: name,
-    phoneNo: phoneNo,
-    paymentMethod: paymentMethod,
+    ID_RegCert_No: ID_RegCert_No,
     email: email,
   };
 
-  const validationSchema = Yup.object({
-    name: Yup.string().required("Required"),
-    phoneNo: Yup.string()
-      .matches(/^254[0-9]{9}$/, "Value should be a valid 12 digit phone number")
-      .required("Required"),
-    email: Yup.string().email(),
-    paymentMethod: Yup.string().oneOf(["Cheque", "Mpesa"]),
-  });
-
-  const onSubmit = (values) => {
-    if (isProxy) delete values["paymentMethod"];
-    handleSaveEdit(values);
-  };
-
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={onSubmit}
-      enableReinitialize
-    >
+    <Formik initialValues={initialValues} enableReinitialize>
       {(formik) => {
         return (
           <Form>
-            <FormikControl
-              control="input"
-              type="text"
-              label="Fullname"
-              name="name"
-              disabled={disabled}
-            />
-            <FormikControl
-              control="input"
-              type="text"
-              label="Phone number"
-              name="phoneNo"
-              disabled={disabled}
-            />
-            <FormikControl
-              control="input"
-              type="text"
-              label="Email"
-              name="email"
-              disabled={disabled}
-            />
-            {!isProxy && (
+            <Stack spacing={3}>
               <FormikControl
-                control="select"
-                label="Payment method"
-                name="paymentMethod"
+                control="input"
+                type="text"
+                label="Fullname"
+                name="name"
                 disabled={disabled}
-                options={options}
               />
-            )}
 
-            {!disabled && (
-              <Button
-                className="float-end my-1"
-                type="submit"
-                variant="outline-primary"
-                disabled={!formik.isValid}
-              >
-                Save Edits
-              </Button>
-            )}
+              <FormikControl
+                control="input"
+                type="text"
+                label="ID Number/ Passport Number"
+                name="ID_RegCert_No"
+                disabled={disabled}
+              />
+
+              <FormikControl
+                control="input"
+                type="text"
+                label="Email"
+                name="email"
+                disabled={disabled}
+              />
+            </Stack>
           </Form>
         );
       }}

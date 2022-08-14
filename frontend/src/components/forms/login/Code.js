@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Button } from "react-bootstrap";
+import { Stack, Button, Box, Typography } from "@mui/material";
 
 import FormikControl from "../form-controls/FormikControl";
 import { DataProvider } from "../../../utilities";
 
-function Code({ data: { phoneNo, db }, prev }) {
+function Code({ data: { ID_RegCert_No, db }, prev }) {
   const provider = new DataProvider();
   const [validated, setValidated] = useState(false);
 
   const initialValues = {
-    phoneNo,
+    ID_RegCert_No,
     db,
     code: "",
   };
@@ -28,7 +28,7 @@ function Code({ data: { phoneNo, db }, prev }) {
     if (status === 400) {
       /** Set a formik error */
       setErrors({
-        phoneNo: data,
+        ID_RegCert_No: data,
         code: data,
       });
 
@@ -46,48 +46,44 @@ function Code({ data: { phoneNo, db }, prev }) {
     >
       {({ isValid }) => {
         let currentComponent = (
-          <Form className="h-100">
-            <FormikControl
-              control="input"
-              type="password"
-              label="Please enter code"
-              name="code"
-            />
-            <Button
-              className="float-start my-1"
-              type="button"
-              variant="outline-primary"
-              onClick={() => prev()}
-            >
-              Prev
-            </Button>
-            <Button
-              className="float-end my-1"
-              type="submit"
-              variant="outline-primary"
-              disabled={!isValid}
-            >
-              Submit
-            </Button>
+          <Form>
+            <Stack spacing={3}>
+              <FormikControl
+                control="input"
+                type="password"
+                label="Please enter code"
+                name="code"
+              />
+
+              <Stack direction="row" justifyContent="space-between">
+                <Button
+                  type="button"
+                  variant="contained"
+                  onClick={() => prev()}
+                >
+                  Prev
+                </Button>
+                <Button type="submit" variant="contained" disabled={!isValid}>
+                  Submit
+                </Button>
+              </Stack>
+            </Stack>
           </Form>
         );
 
         if (validated) {
           currentComponent = (
-            <div>
-              <h5 className="text-center">First time login</h5>
-              <p className="text-center">
+            <Box>
+              <Typography variant="h6" textAlign="center">
+                Successfully validated
+              </Typography>
+              <Typography variant="body1" textAlign="center" mb={4}>
                 Login details have been sent to your email
-              </p>
-              <Button
-                className="float-end my-1"
-                type="button"
-                variant="outline-primary"
-                onClick={() => prev()}
-              >
+              </Typography>
+              <Button type="button" variant="contained" onClick={() => prev()}>
                 Prev
               </Button>
-            </div>
+            </Box>
           );
         }
 

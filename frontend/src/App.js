@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import { Home, Profile, NoMatch, Login, Agm, Faq } from "./components/pages";
+import { NoMatch, Login, Home } from "./components/pages";
 import { AuthProvider, RequireAuth } from "./utilities";
 
 import "./App.scss";
@@ -17,13 +17,8 @@ function App() {
               <Home />
             </RequireAuth>
           }
-        >
-          <Route index element={<Agm />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="agm" element={<Agm />} />
-          <Route path="faqs" element={<Faq />} />
-        </Route>
-        <Route path="login" element={<Login />} />
+        />
+        <Route path="/login" element={<Login />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </AuthProvider>

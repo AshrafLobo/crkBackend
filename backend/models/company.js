@@ -20,6 +20,10 @@ class Company extends DbService {
   async getOne(id) {
     return await super.getOne(id);
   }
+
+  async getOneWithDb(db) {
+    return await super.getOne(db, "db");
+  }
 }
 
 /** Validate login credentials */

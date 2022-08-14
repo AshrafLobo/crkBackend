@@ -4,7 +4,7 @@ import jwt_decode from "jwt-decode";
 
 import { useAuth, DataProvider } from "../../utilities";
 import { CreateProxyForm } from "../forms";
-import { Agendas, Resources, Modal, Video } from "../reusable";
+import Modal from "../reusable/Modal";
 
 function Agm(props) {
   const auth = useAuth();
@@ -37,26 +37,6 @@ function Agm(props) {
     });
   };
 
-  const [agendas, setAgendas] = useState([]);
-  useEffect(() => {
-    (async () => {
-      const { data } = await provider.get("agenda", {
-        "x-auth-token": auth.token,
-      });
-      setAgendas(data);
-    })();
-  }, []);
-
-  const [resources, setResources] = useState([]);
-  useEffect(() => {
-    (async () => {
-      const { data } = await provider.get("resources", {
-        "x-auth-token": auth.token,
-      });
-      setResources(data);
-    })();
-  }, []);
-
   return (
     <>
       <Row className="m-4">
@@ -66,20 +46,6 @@ function Agm(props) {
         >
           Create proxy
         </button>
-      </Row>
-
-      <Row className="m-4">
-        <Video />
-      </Row>
-
-      <Row className="m-3">
-        <Col xs={12} lg={6} className="my-2">
-          <Agendas agendas={agendas} />
-        </Col>
-
-        <Col xs={12} lg={6} className="my-2">
-          <Resources resources={resources} />
-        </Col>
       </Row>
 
       <Modal show={show} setShow={setShow} title="Create proxy">

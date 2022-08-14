@@ -5,26 +5,26 @@ import { StepOne, StepTwo } from "./";
 function LoginForm({ handleLogin, options }) {
   const [data, setData] = useState({
     db: "",
-    phoneNo: "",
+    ID_RegCert_No: "",
     pin: "",
   });
 
   const [currentStep, setCurrentStep] = useState(0);
 
   const handleNextStep = (newData, final = false, setErrors = null) => {
-    setData((prev) => ({ ...prev, ...newData }));
+    setData((prevData) => ({ ...prevData, ...newData }));
 
     if (final) {
       handleSubmit(newData, setErrors);
       return;
     }
 
-    setCurrentStep((prev) => prev + 1);
+    setCurrentStep((prevStep) => prevStep + 1);
   };
 
   const handlePrevStep = (newData = {}) => {
-    setData((prev) => ({ ...prev, ...newData }));
-    setCurrentStep((prev) => prev - 1);
+    setData((prevData) => ({ ...prevData, ...newData }));
+    setCurrentStep((prevStep) => prevStep - 1);
   };
 
   const steps = [

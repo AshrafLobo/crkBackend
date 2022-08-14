@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Button } from "react-bootstrap";
+import { Box, Button, Typography, Stack } from "@mui/material";
 
 import { Code } from "./";
 import FormikControl from "../form-controls/FormikControl";
@@ -10,15 +10,23 @@ import { DataProvider } from "../../../utilities";
 function StepTwo({ data: currentData, next, prev }) {
   const [hasPin, setHasPin] = useState(null);
   const [isProxy, setIsProxy] = useState(null);
+  const [fetchingData, setFetchingData] = useState(true);
+
   const provider = new DataProvider();
 
   useEffect(() => {
     (async () => {
-      const { data } = await provider.post("auth/checkPin", currentData);
+      const { db, ID_RegCert_No } = currentData;
+
+      const { data } = await provider.post("auth/checkPin", {
+        db,
+        ID_RegCert_No,
+      });
 
       if (data) {
         setIsProxy(data.isProxy);
         setHasPin(data.hasPin);
+        setFetchingData(false);
       }
     })();
   }, []);
@@ -42,54 +50,51 @@ function StepTwo({ data: currentData, next, prev }) {
       {({ values, isValid }) => {
         let currentComponent = null;
 
-        if (!hasPin && !isProxy) {
+        if (!fetchingData && !hasPin && !isProxy) {
           currentComponent = (
-            <div>
-              <h5 className="text-center">First time login</h5>
-              <p className="text-center">
+            <Box>
+              <Typography variant="h6" textAlign="center">
+                First time login
+              </Typography>
+              <Typography variant="body1" textAlign="center" mb={4}>
                 Login details have been sent to your email
-              </p>
+              </Typography>
               <Button
-                className="float-end my-1"
                 type="button"
-                variant="outline-primary"
+                variant="contained"
                 onClick={() => prev(values)}
               >
                 Prev
               </Button>
-            </div>
+            </Box>
           );
         }
 
-        if (!hasPin && isProxy) {
+        if (!fetchingData && !hasPin && isProxy) {
           currentComponent = <Code prev={prev} data={currentData} />;
         }
 
-        if (hasPin) {
+        if (!fetchingData && hasPin) {
           currentComponent = (
-            <Form className="h-100">
+            <Form>
               <FormikControl
                 control="input"
                 type="password"
                 label="Pin"
                 name="pin"
               />
-              <Button
-                className="float-start my-1"
-                type="button"
-                variant="outline-primary"
-                onClick={() => prev(values)}
-              >
-                Prev
-              </Button>
-              <Button
-                className="float-end my-1"
-                type="submit"
-                variant="outline-primary"
-                disabled={!isValid}
-              >
-                Submit
-              </Button>
+              <Stack direction="row" justifyContent="space-between" my={3}>
+                <Button
+                  type="button"
+                  variant="contained"
+                  onClick={() => prev(values)}
+                >
+                  Prev
+                </Button>
+                <Button type="submit" variant="contained" disabled={!isValid}>
+                  Submit
+                </Button>
+              </Stack>
             </Form>
           );
         }

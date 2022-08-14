@@ -15,18 +15,25 @@ class User extends DbService {
     super.connect();
   }
 
-  async getOne(phoneNo) {
-    return await super.getOne(phoneNo, "phoneNo");
+  async getOne(ID_RegCert_No) {
+    return await super.getOne(ID_RegCert_No, "ID_RegCert_No");
   }
 
-  async updateRecord(data, phoneNo) {
-    return await super.updateRecord(data, phoneNo, "phoneNo");
+  async updateRecord(data, ID_RegCert_No) {
+    return await super.updateRecord(data, ID_RegCert_No, "ID_RegCert_No");
   }
 
   /** Generate a jwt token for logged in user */
   generateToken(data) {
     return jwt.sign(
-      _.pick(data, ["id", "phoneNo", "db", "isProxy"]),
+      _.pick(data, [
+        "ID_RegCert_No",
+        "db",
+        "isProxy",
+        "full_name",
+        "email",
+        "company",
+      ]),
       config.get("jwtPrivateKey")
     );
   }
@@ -45,13 +52,7 @@ class User extends DbService {
 /** Validate login credentials */
 function validate(data) {
   const schema = Joi.object({
-    phoneNo: Joi.string()
-      .pattern(new RegExp("^[0-9]{12}$"))
-      .required()
-      .messages({
-        "string.pattern.base":
-          "Phone number should be a valid 12 digit phone number",
-      }),
+    ID_RegCert_No: Joi.string().required(),
     pin: Joi.string().pattern(new RegExp("^[0-9]{4}$")).required().messages({
       "string.pattern.base": "Pin should be a valid 4 digit number",
     }),
@@ -64,19 +65,7 @@ function validate(data) {
 /** Validate check pin */
 function validateCheckPin(data) {
   const schema = Joi.object({
-    phoneNo: Joi.string()
-      .pattern(new RegExp("^[0-9]{12}$"))
-      .required()
-      .messages({
-        "string.pattern.base":
-          "Phone number should be a valid 12 digit phone number",
-      }),
-    pin: Joi.string()
-      .allow(null, "")
-      .pattern(new RegExp("^[0-9]{4}$"))
-      .messages({
-        "string.pattern.base": "Pin should be a valid 4 digit number",
-      }),
+    ID_RegCert_No: Joi.string().required(),
     db: Joi.string().required(),
   });
 
@@ -87,13 +76,7 @@ function validateCheckPin(data) {
 function validateUser(data) {
   const schema = Joi.object({
     name: Joi.string().required(),
-    phoneNo: Joi.string()
-      .pattern(new RegExp("^[0-9]{12}$"))
-      .required()
-      .messages({
-        "string.pattern.base":
-          "Phone number should be a valid 12 digit phone number",
-      }),
+    ID_RegCert_No: Joi.string().required(),
     email: Joi.string().email(),
     paymentMethod: Joi.string().required(),
   });

@@ -1,8 +1,12 @@
 /** Import statements */
+const dotenv = require("dotenv");
+dotenv.config();
+
 const express = require("express");
 const cors = require("cors");
 const config = require("config");
-const dotenv = require("dotenv");
+const helmet = require("helmet");
+const compression = require("compression");
 
 const agenda = require("./routes/agenda");
 const answers = require("./routes/answers");
@@ -15,10 +19,8 @@ const user = require("./routes/user");
 const votes = require("./routes/votes");
 
 /** Check if `jwtPrivateKey` is set */
-dotenv.config();
-
 if (!config.get("jwtPrivateKey")) {
-  console.error("FATAL ERROR: jwtPrivateKey is not defined");
+  // console.error("FATAL ERROR: jwtPrivateKey is not defined");
   process.exit(1);
 }
 
@@ -27,6 +29,8 @@ const app = express();
 app.use(express.json());
 // app.use(express.static("../ussd_dashboard/uploads"));
 app.use(cors());
+app.use(helmet());
+app.use(compression());
 
 app.use("/api/agenda", agenda);
 app.use("/api/answers", answers);

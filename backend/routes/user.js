@@ -7,34 +7,33 @@ const { urlencoded } = require("express");
 
 const router = express.Router();
 
-router.get("/:phoneNo", [auth], async (req, res) => {
+router.get("/:ID_RegCert_No", [auth], async (req, res) => {
   const user = new User(req.user.db);
-  const data = await user.getOne(req.params.phoneNo);
+  const data = await user.getOne(req.params.ID_RegCert_No);
   user.close();
 
   if (!data || data.length == 0)
     return res
       .status(404)
-      .send(`The user with the number ${req.params.phoneNo} does not exist`);
+      .send(`The user with the ID ${req.params.ID_RegCert_No} does not exist`);
 
   res.send(
     _.pick(data[0], [
-      "MemberNo",
+      "ID_RegCert_No",
       "phoneNo",
       "full_name",
-      "PaymentName",
       "email",
-      "shares",
+      "MemberNo",
     ])
   );
 });
 
-router.put("/:phoneNo", [auth], async (req, res) => {
+router.put("/:ID_RegCert_No", [auth], async (req, res) => {
   const { error } = validateUser(req.body);
   if (error) return res.status(400).send(error.message);
 
   const user = new User(req.user.db);
-  let data = await user.getOne(req.params.phoneNo);
+  let data = await user.getOne(req.params.ID_RegCert_No);
 
   if (!data || data.length == 0) {
     user.close();
@@ -42,22 +41,22 @@ router.put("/:phoneNo", [auth], async (req, res) => {
   }
 
   data[0].full_name = req.body.name;
-  data[0].phoneNo = req.body.phoneNo;
+  data[0].ID_RegCert_No = req.body.ID_RegCert_No;
   data[0].email = req.body.email;
   data[0].PaymentName = req.body.paymentMethod;
 
-  user.updateRecord(data[0], req.params.phoneNo);
+  user.updateRecord(data[0], req.params.ID_RegCert_No);
   user.close();
 
   res.send(data[0]);
 });
 
-router.put("/changePin/:phoneNo", [auth], async (req, res) => {
+router.put("/changePin/:ID_RegCert_No", [auth], async (req, res) => {
   const { error } = validateChangePin(req.body);
   if (error) return res.status(400).send(error.message);
 
   const user = new User(req.user.db);
-  let data = await user.getOne(req.params.phoneNo);
+  let data = await user.getOne(req.params.ID_RegCert_No);
 
   if (!data || data.length == 0) {
     user.close();
@@ -70,7 +69,7 @@ router.put("/changePin/:phoneNo", [auth], async (req, res) => {
   }
 
   data[0].pin = req.body.newPin;
-  user.updateRecord(data[0], req.params.phoneNo);
+  user.updateRecord(data[0], req.params.ID_RegCert_No);
   user.close();
 
   res.send(data[0]);

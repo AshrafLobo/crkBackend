@@ -2,6 +2,8 @@ const express = require("express");
 
 const { User, validate, validateCheckPin } = require("../models/user");
 const { Proxy } = require("../models/proxy");
+const { Company } = require("../models/company");
+const sendMail = require("../common/sendMail");
 
 const router = express.Router();
 
@@ -10,15 +12,15 @@ router.post("/checkPin", async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   const user = new User(req.body.db);
-  let data = await user.getOne(req.body.phoneNo);
+  let data = await user.getOne(req.body.ID_RegCert_No);
 
   let isProxy = false;
-  let hasPin = true;
+  let hasPin = false;
 
   /** Check if user is a proxy */
   if (!data || data.length == 0) {
     const proxy = new Proxy(req.body.db);
-    data = await proxy.getOne(req.body.phoneNo);
+    data = await proxy.getOne(req.body.ID_RegCert_No);
     proxy.close();
 
     if (!data || data.length == 0)
@@ -27,15 +29,28 @@ router.post("/checkPin", async (req, res) => {
     isProxy = true;
   }
 
-  /** Return true if pin has not been set */
-  if (!data[0].pin) hasPin = false;
+  /** Return true if pin has been set */
+  if (data[0].pin) hasPin = true;
 
   /** Generate pin if user is not a proxy */
   if (!hasPin && !isProxy) {
-    const response = await user.updateRecord(
-      { pin: user.generatePin() },
-      data[0].phoneNo
-    );
+    const pin = user.generatePin();
+
+    const response = await user.updateRecord({ pin }, data[0].ID_RegCert_No);
+
+    const output = `
+    <h3>AGM LOGIN DETAILS</h3>
+    <p>The following are the login details to access the AGM Registration.</p>
+    
+    <b>
+      <ul>
+        <li>ID Number/ Passport Number: ${data[0].ID_RegCert_No}</li>    
+        <li>Pin: ${pin}</li>    
+      </ul>
+    </b> 
+    `;
+
+    sendMail(output, "AGM LOGIN DETAILS", data[0].email);
   }
 
   user.close();
@@ -48,27 +63,36 @@ router.post("/", async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   const user = new User(req.body.db);
-  let data = await user.getOne(req.body.phoneNo);
+  let data = await user.getOne(req.body.ID_RegCert_No);
   user.close();
+
+  const company = new Company();
+  let companyData = await company.getOneWithDb(req.body.db);
+  company.close();
 
   let isProxy = false;
 
   /** Check if user is a proxy */
   if (!data || data.length == 0) {
     const proxy = new Proxy(req.body.db);
-    data = await proxy.getOne(req.body.phoneNo);
+    data = await proxy.getOne(req.body.ID_RegCert_No);
     proxy.close();
 
     if (!data || data.length == 0)
-      return res.status(400).send("Invalid phone number or pin");
+      return res.status(400).send("Invalid ID number or pin");
 
     isProxy = true;
   }
 
   if (data[0].pin != req.body.pin)
-    return res.status(400).send("Invalid phone number or pin");
+    return res.status(400).send("Invalid ID number or pin");
 
-  const token = user.generateToken({ ...data[0], db: req.body.db, isProxy });
+  const token = user.generateToken({
+    ...data[0],
+    company: companyData[0].name,
+    db: req.body.db,
+    isProxy,
+  });
   res.send(token);
 });
 
