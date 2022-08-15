@@ -18,7 +18,7 @@ function App() {
             </RequireAuth>
           }
         />
-        <Route path="/login" element={<Login />} />
+        <Route exact path="/login" element={<Login />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </AuthProvider>
