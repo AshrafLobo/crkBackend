@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 /** Get environment variables */
-const { USER, PASSWORD, DB_PORT, HOST } = process.env;
+const { DB_USER, DB_PASSWORD, DB_PORT, HOST } = process.env;
 
 class DbService {
   #database;
@@ -23,8 +23,8 @@ class DbService {
   connect() {
     this._connection = mysql.createConnection({
       host: HOST,
-      user: USER,
-      password: PASSWORD,
+      user: DB_USER,
+      password: DB_PASSWORD,
       database: this.#database,
       port: DB_PORT,
     });
