@@ -30,8 +30,8 @@ class DbService {
     });
 
     this._connection.connect((err) => {
-      // if (err) console.log(err.message);
-      // console.log(`DB ${this.#database} status: ` + this._connection.state);
+      if (err) console.log(err.message);
+      console.log(`DB ${this.#database} status: ` + this._connection.state);
     });
   }
 
@@ -39,7 +39,7 @@ class DbService {
   close() {
     if (this._connection)
       this._connection.end(() => {
-        // console.log(`Connection to ${this.#database} closed...`)
+        console.log(`Connection to ${this.#database} closed...`);
       });
   }
 
@@ -56,7 +56,7 @@ class DbService {
 
       return response;
     } catch (err) {
-      // console.log(err);
+      console.log(err);
     }
   }
 
@@ -73,7 +73,7 @@ class DbService {
 
       return response;
     } catch (err) {
-      // console.log(err);
+      console.log(err);
     }
   }
 
@@ -95,7 +95,7 @@ class DbService {
       return response;
     } catch (err) {
       /** Error if query is ok */
-      // console.log(err);
+      console.log(err);
     }
   }
 
@@ -112,7 +112,7 @@ class DbService {
 
       return response;
     } catch (err) {
-      // console.log(err);
+      console.log(err);
     }
   }
 }

@@ -24,10 +24,17 @@ function Home(props) {
   /** Authentication */
   const auth = useAuth();
   const provider = new DataProvider();
-  const { isProxy, ID_RegCert_No: idNumber } = jwt_decode(auth.token);
+  const {
+    isProxy,
+    ID_RegCert_No: idNumber,
+    email: user_email,
+    company,
+  } = jwt_decode(auth.token);
 
   /** Set user data */
   const [user, setUser] = useState({});
+  const [hasConfirmed, setHasConfirmed] = useState(false);
+  const [attending, setAttending] = useState(false);
   useEffect(() => {
     (async () => {
       let url = "user";
@@ -47,15 +54,23 @@ function Home(props) {
         ID_RegCert_No: ID_RegCert_No,
         email: email,
       });
+
+      const response = await provider.get(`attendance/${idNumber}`, {
+        "x-auth-token": auth.token,
+      });
+
+      if (response.data.length > 0) {
+        setHasConfirmed(true);
+        setAttending(true);
+      }
     })();
   }, []);
 
   /** State for attending meeting */
-  const [attending, setAttending] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [toastOpt, setToastOpt] = useState({
     open: false,
-    severity: "",
+    severity: "success",
     message: "",
   });
   /** Handle proxy creation */
@@ -84,7 +99,7 @@ function Home(props) {
         "x-auth-token": auth.token,
       });
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         setToastOpt({
           open: true,
           severity: "success",
@@ -98,6 +113,43 @@ function Home(props) {
         });
       }
     } catch (error) {
+      setToastOpt({
+        open: true,
+        severity: "error",
+        message: "An error occured",
+      });
+    }
+  };
+
+  const handleAttendance = async () => {
+    try {
+      const response = await provider.post(
+        "attendance",
+        {
+          MemberNo: idNumber,
+          ID_RegCert_No: idNumber,
+          email: user_email,
+        },
+        {
+          "x-auth-token": auth.token,
+        }
+      );
+
+      setHasConfirmed(true);
+      if (response.status === 200) {
+        setToastOpt({
+          open: true,
+          severity: "success",
+          message: "Successfully confirmed attendance",
+        });
+      } else {
+        setToastOpt({
+          open: true,
+          severity: "success",
+          message: response.data,
+        });
+      }
+    } catch (e) {
       setToastOpt({
         open: true,
         severity: "error",
@@ -140,7 +192,9 @@ function Home(props) {
           }}
         >
           <Stack spacing={1} my={3}>
-            <Typography variant="h5">Please confirm your details</Typography>
+            <Typography variant="h5">
+              Please confirm your attendance of {company} AGM meeting
+            </Typography>
           </Stack>
 
           <ProfileEditForm disabled={true} user={user} isProxy={isProxy} />
@@ -153,10 +207,19 @@ function Home(props) {
                   checked={isProxy || attending}
                   onChange={() => setAttending(!attending)}
                   size="small"
-                  disabled={isProxy}
+                  disabled={hasConfirmed || isProxy}
                 />
               }
             />
+
+            <Button
+              variant="contained"
+              size="small"
+              disabled={hasConfirmed || attending === true}
+              onClick={handleAttendance}
+            >
+              Confirm attendance
+            </Button>
 
             <Divider>
               <Typography fontWeight="bold">OR</Typography>
@@ -165,7 +228,7 @@ function Home(props) {
             <Button
               variant="contained"
               size="small"
-              disabled={isProxy || attending}
+              disabled={hasConfirmed || isProxy || attending}
               onClick={() => setOpenModal(true)}
             >
               Create proxy
