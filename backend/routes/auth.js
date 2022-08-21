@@ -41,7 +41,7 @@ router.post("/checkPin", async (req, res) => {
     const output = `
     <h3>AGM LOGIN DETAILS</h3>
     <p>The following are the login details to access the AGM Registration.</p>
-    
+    <p>Please go to <em>https://secure.comp-rite.co.ke/register/login/</em> to complete your registration</p>
     <b>
       <ul>
         <li>ID Number/ Passport Number: ${data[0].ID_RegCert_No}</li>    

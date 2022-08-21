@@ -16,7 +16,7 @@ import { Logout } from "@mui/icons-material";
 import jwt_decode from "jwt-decode";
 
 import { CreateProxyForm, ProfileEditForm } from "../forms";
-import Modal from "../reusable/Modal";
+import { Modal, Toast } from "../reusable";
 import { DataProvider, useAuth } from "../../utilities";
 import Logo from "../../images/logo.png";
 
@@ -52,32 +52,58 @@ function Home(props) {
 
   /** State for attending meeting */
   const [attending, setAttending] = useState(false);
-  const [open, setOpen] = useState(false);
-
+  const [openModal, setOpenModal] = useState(false);
+  const [toastOpt, setToastOpt] = useState({
+    open: false,
+    severity: "",
+    message: "",
+  });
   /** Handle proxy creation */
   const handleCreateProxy = async (values) => {
-    setOpen(false);
+    try {
+      setOpenModal(false);
 
-    const { full_name, email, ID_RegCert_No } = values;
+      const { full_name, email, ID_RegCert_No } = values;
 
-    /** Get user data */
-    const {
-      data: { MemberNo: users_MemberNo },
-    } = await provider.get(`user/${idNumber}`, {
-      "x-auth-token": auth.token,
-    });
+      /** Get user data */
+      const {
+        data: { MemberNo: users_MemberNo },
+      } = await provider.get(`user/${idNumber}`, {
+        "x-auth-token": auth.token,
+      });
 
-    /** Create payload */
-    const payload = {
-      users_MemberNo,
-      full_name,
-      email,
-      ID_RegCert_No,
-    };
+      /** Create payload */
+      const payload = {
+        users_MemberNo,
+        full_name,
+        email,
+        ID_RegCert_No,
+      };
 
-    await provider.post("proxy", payload, {
-      "x-auth-token": auth.token,
-    });
+      const response = await provider.post("proxy", payload, {
+        "x-auth-token": auth.token,
+      });
+
+      if (response.status == 200) {
+        setToastOpt({
+          open: true,
+          severity: "success",
+          message: "Proxy created successfully",
+        });
+      } else {
+        setToastOpt({
+          open: true,
+          severity: "success",
+          message: response.data,
+        });
+      }
+    } catch (error) {
+      setToastOpt({
+        open: true,
+        severity: "error",
+        message: "An error occured",
+      });
+    }
   };
 
   return (
@@ -140,7 +166,7 @@ function Home(props) {
               variant="contained"
               size="small"
               disabled={isProxy || attending}
-              onClick={() => setOpen(true)}
+              onClick={() => setOpenModal(true)}
             >
               Create proxy
             </Button>
@@ -151,9 +177,17 @@ function Home(props) {
       <Modal
         title="Create proxy"
         body={<CreateProxyForm handleCreateProxy={handleCreateProxy} />}
-        open={open}
-        setOpen={setOpen}
+        open={openModal}
+        setOpen={setOpenModal}
       />
+
+      <Toast
+        open={toastOpt.open}
+        handleClose={() => setToastOpt({ ...toastOpt, open: false })}
+        severity={toastOpt.severity}
+      >
+        {toastOpt.message}
+      </Toast>
     </Container>
   );
 }

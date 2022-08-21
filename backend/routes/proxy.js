@@ -53,7 +53,7 @@ router.post("/", [auth], async (req, res) => {
     </b>
 
     <p>The AGM meeting will be held virtually.</p>
-    <p>You are required to confirm that you received this email by going to the site <em>http://localhost:5000/login/</em> to complete your registration.</p>
+    <p>You are required to confirm that you received this email by going to the site <em>https://secure.comp-rite.co.ke/register/login/</em> to complete your registration.</p>
     <p>Enter the code  and details bellow to verify and recieve your pin</p>
 
     <h4>Verification credentials<h4/>
@@ -83,7 +83,7 @@ router.post("/", [auth], async (req, res) => {
 
     <p>The AGM meeting will be held virtually.</p>
     <p>We have notified your proxy that he/she has been added.</p>
-    <p>Please ensure that your proxy completes registration at <em>http://localhost:5000/login</em> otherwise he/she will be unable to attend the meeting.</p>
+    <p>Please ensure that your proxy completes registration at <em>https://secure.comp-rite.co.ke/register/login/</em> otherwise he/she will be unable to attend the meeting.</p>
   `;
   sendMail(output2, "COMPRITE PROXY NOTIFICATION", req.user.email);
 
@@ -114,7 +114,8 @@ router.post("/validate", async (req, res) => {
   const output = `
     <h3>AGM LOGIN DETAILS</h3>
     <p>The following are the login details to access the AGM Registration.</p>
-    
+    <p>Please go to <em>https://secure.comp-rite.co.ke/register/login/</em> to complete your registration</p>
+
     <b>
       <ul>
         <li>ID Number/ Passport Number: ${data[0].ID_RegCert_No}</li>    
