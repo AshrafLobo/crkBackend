@@ -8,6 +8,7 @@ const {
   validateCode,
   validateChangePin,
 } = require("../models/proxy");
+const { Attendance } = require("../models/attendance")
 const auth = require("../middleware/auth");
 const sendMail = require("../common/sendMail");
 
@@ -173,6 +174,30 @@ router.put("/:ID_RegCert_No", [auth], async (req, res) => {
   proxy.close();
 
   res.send(data[0]);
+});
+
+router.delete("/:ID_RegCert_No", [auth], async (req, res) => {
+  const proxy = new Proxy(req.user.db);
+  let data = await proxy.getOne(req.params.ID_RegCert_No);
+
+  if (!data || data.length == 0) {
+    proxy.close();
+    return res.status(404).send("Proxy does not exists.");
+  }
+
+  try {
+    proxy.deleteRecord(req.params.ID_RegCert_No);
+    proxy.close();
+	
+	const attendance = new Attendance(req.user.db)
+	attendance.deleteRecord(req.params.ID_RegCert_No);
+	attendance.close()
+  } catch (e) {
+    res.send(e);
+    return;
+  }
+
+  res.send(true);
 });
 
 module.exports = router;

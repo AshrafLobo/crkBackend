@@ -36,4 +36,14 @@ export default class DataProvider {
       return error.response;
     }
   }
+
+  async delete(route, headers = {}) {
+    try {
+      const url = `${this.#url}/${route}`;
+      const response = await axios.delete(url, { headers: headers });
+      return response;
+    } catch (error) {
+      return error.response;
+    }
+  }
 }

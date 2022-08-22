@@ -32,6 +32,10 @@ class Attendance extends DbService {
   async updateRecord(data, ID_RegCert_No) {
     return await super.updateRecord(data, ID_RegCert_No, "ID_RegCert_No");
   }
+  
+  async deleteRecord(ID_RegCert_No) {
+	return await super.deleteRecord(ID_RegCert_No, "ID_RegCert_No")
+  }
 }
 
 function validate(data) {

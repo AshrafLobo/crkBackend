@@ -2,8 +2,8 @@ const express = require("express");
 const _ = require("lodash");
 
 const { User, validateUser, validateChangePin } = require("../models/user");
+const { Proxy } = require("../models/proxy");
 const auth = require("../middleware/auth");
-const { urlencoded } = require("express");
 
 const router = express.Router();
 
@@ -25,6 +25,19 @@ router.get("/:ID_RegCert_No", [auth], async (req, res) => {
       "email",
       "MemberNo",
     ])
+  );
+});
+
+router.get("/getProxy/:ID_RegCert_No", [auth], async (req, res) => {
+  const proxy = new Proxy(req.user.db);
+  const data = await proxy.getProxy(req.params.ID_RegCert_No);
+  proxy.close();
+
+  if (!data || data.length == 0)
+    return;
+
+  res.send(
+    _.pick(data[0], ["ID_RegCert_No", "full_name", "email", "MemberNo"])
   );
 });
 

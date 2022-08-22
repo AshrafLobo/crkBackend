@@ -38,6 +38,10 @@ class Proxy extends DbService {
     return await super.updateRecord(data, ID_RegCert_No, "ID_RegCert_No");
   }
 
+  async deleteRecord(ID_RegCert_No) {
+    return await super.deleteRecord(ID_RegCert_No, "ID_RegCert_No");
+  }
+
   /** Generate a pin for a verified proxy */
   generatePin() {
     return generator.generate({

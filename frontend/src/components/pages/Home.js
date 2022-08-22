@@ -2,12 +2,18 @@ import React, { useEffect, useState } from "react";
 import {
   AppBar,
   Button,
+  Card,
   Checkbox,
+  Chip,
   Container,
   Divider,
   FormControlLabel,
   Grid,
   IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  ListSubheader,
   Stack,
   Toolbar,
   Typography,
@@ -33,8 +39,13 @@ function Home(props) {
 
   /** Set user data */
   const [user, setUser] = useState({});
+  const [proxy, setProxy] = useState({});
   const [hasConfirmed, setHasConfirmed] = useState(false);
   const [attending, setAttending] = useState(false);
+  const [attendingOpts, setAttendingOpts] = useState({
+	  isAttending: 'PENDING CONFIRMATION',
+	  color: "default"
+  });
   useEffect(() => {
     (async () => {
       let url = "user";
@@ -62,7 +73,38 @@ function Home(props) {
       if (response.data.length > 0) {
         setHasConfirmed(true);
         setAttending(true);
+		setAttendingOpts({
+			isAttending: "CONFIRMED",
+			color: "success"
+		})
       }
+
+      if (!isProxy) {
+		
+		try {
+			const proxyData = await provider.get(`user/getProxy/${idNumber}`, {
+				"x-auth-token": auth.token,
+			});
+			
+			if (
+			  proxyData.status === 200 &&
+			  Object.keys(proxyData.data).length > 0
+			) {
+			  setProxy(proxyData.data);
+			  setHasConfirmed(true);
+			  setAttendingOpts({
+				isAttending: "CONFIRMED",
+				color: "success"
+			  })
+			}
+		}
+		catch (e) {
+			console.log(e)
+		}  
+      }
+	  else {
+		  setAttending(true)
+	  }
     })();
   }, []);
 
@@ -105,10 +147,22 @@ function Home(props) {
           severity: "success",
           message: "Proxy created successfully",
         });
+		
+		setHasConfirmed(true)
+		setAttendingOpts({
+			isAttending: "CONFIRMED",
+			color: "success"
+		})
+		
+		setProxy({
+			full_name,
+			email,
+			ID_RegCert_No,
+		})
       } else {
         setToastOpt({
           open: true,
-          severity: "success",
+          severity: "default",
           message: response.data,
         });
       }
@@ -142,6 +196,12 @@ function Home(props) {
           severity: "success",
           message: "Successfully confirmed attendance",
         });
+		
+		setAttendingOpts({
+			isAttending: "CONFIRMED",
+			color: "success"
+		})
+		
       } else {
         setToastOpt({
           open: true,
@@ -158,16 +218,80 @@ function Home(props) {
     }
   };
 
+  /** Handle Remove click */
+  const handleRemoveProxy = async (ID_RegCert_No) => {
+    const response = await provider.delete(`proxy/${ID_RegCert_No}`, {
+      "x-auth-token": auth.token,
+    });
+	
+    if (response.data === true) {
+      setProxy({});
+
+      setToastOpt({
+        open: true,
+        severity: "success",
+        message: "Successfully removed proxy",
+      });
+	  
+	  setHasConfirmed(false)
+	  setAttendingOpts({
+		isAttending: "PENDING CONFIRMATION",
+		color: "default"
+	  })
+    }
+  };
+
+  /** Define proxy details */
+  let proxyDetails = "";
+  if (Object.keys(proxy).length > 0 && !isProxy) {
+    proxyDetails = (
+      <Stack
+        direction="row"
+        spacing={2}
+        alignItems="baseline"
+        p={1}
+        bgcolor="#e5e5e5"
+        width="100%"
+      >
+        <ListItemText
+          primary={proxy.full_name}
+          sx={{ color: "gray", fontWeight: "800", textTransform: "uppercase" }}
+        />
+        <Chip
+          label="Remove"
+          color="error"
+          size="small"
+          onDelete={() => handleRemoveProxy(proxy.ID_RegCert_No)}
+        />
+      </Stack>
+    );
+  } else if (Object.keys(proxy).length === 0 || isProxy) {
+    proxyDetails = (
+      <Stack
+        direction="row"
+        alignItems="baseline"
+        p={1}
+        bgcolor="#e5e5e5"
+        width="100%"
+      >
+        <ListItemText
+          primary="NO PROXY CREATED"
+          sx={{ color: "gray", fontWeight: "800" }}
+        />
+      </Stack>
+    );
+  }
+
   return (
     <Container maxWidth="xl" disableGutters>
       <AppBar position="static" color="transparent">
         <Toolbar>
           <IconButton>
-            <img src={Logo} alt="Logo" width="50px" height="50px" />
+            <img src={Logo} alt="Logo" width="40px" height="40px" />
           </IconButton>
 
           <Typography variant="body1" sx={{ flexGrow: 1 }}>
-            Comp-rite AGM Registration
+            AGM Registration
           </Typography>
           <Button
             color="primary"
@@ -180,12 +304,18 @@ function Home(props) {
         </Toolbar>
       </AppBar>
 
-      <Grid container justifyContent="center" my={10}>
+      <Grid
+        container
+        justifyContent="center"
+        my={10}
+        rowGap={{ xs: 4, md: 0 }}
+        columnGap={4}
+      >
         <Grid
           item
           xs={11}
-          md={6}
-          p={6}
+          md={5}
+          p={3}
           sx={{
             border: "1px solid #e0e0e0",
             borderRadius: "10px",
@@ -215,7 +345,7 @@ function Home(props) {
             <Button
               variant="contained"
               size="small"
-              disabled={hasConfirmed || attending === true}
+              disabled={hasConfirmed || attending === false}
               onClick={handleAttendance}
             >
               Confirm attendance
@@ -234,6 +364,58 @@ function Home(props) {
               Create proxy
             </Button>
           </Stack>
+        </Grid>
+        <Grid item xs={11} md={5}>
+          <Card p={2}>
+            <List>
+              <ListItem>
+                <Stack
+                  direction="row"
+                  alignItems="baseline"
+                  spacing={2}
+                  p={0}
+                  width="100%"
+                >
+                  <ListItemText primary={<b>LOGGED IN AS:</b>} />
+                  <Chip
+                    color="primary"
+                    label={isProxy ? "PROXY" : "MEMBER"}
+                    size="small"
+                  />
+                </Stack>
+              </ListItem>
+              <Divider light sx={{ marginX: 2, marginBottom: 3 }} />
+              <ListSubheader>AGM DETAILS</ListSubheader>
+              <ListItem sx={{ paddingY: 0 }}>
+                <ListItemText
+                  primary={
+                    <>
+                      <b>COMPANY: </b>
+                      {company}
+                    </>
+                  }
+                />
+              </ListItem>
+              <ListItem sx={{ paddingY: 0 }}>
+                <ListItemText
+                  primary={
+                    <>
+                      <b>ATTENGING AGM:</b>
+                      <Chip
+                        color={attendingOpts.color}
+                        label={attendingOpts.isAttending}
+                        size="small"
+                        sx={{ borderRadius: "5px", marginLeft: 3 }}
+                      />
+                    </>
+                  }
+                />
+              </ListItem>
+              <Divider light sx={{ marginX: 2, marginTop: 3 }} />
+              <ListSubheader>CREATED PROXY</ListSubheader>
+              <ListItem sx={{ paddingY: 0 }}>{proxyDetails}</ListItem>
+            </List>
+          </Card>
         </Grid>
       </Grid>
 

@@ -31,7 +31,7 @@ class DbService {
 
     this._connection.connect((err) => {
       if (err) console.log(err.message);
-      console.log(`DB ${this.#database} status: ` + this._connection.state);
+      //console.log(`DB ${this.#database} status: ` + this._connection.state);
     });
   }
 
@@ -39,7 +39,7 @@ class DbService {
   close() {
     if (this._connection)
       this._connection.end(() => {
-        console.log(`Connection to ${this.#database} closed...`);
+        //console.log(`Connection to ${this.#database} closed...`);
       });
   }
 
@@ -105,6 +105,23 @@ class DbService {
       const response = await new Promise((resolve, reject) => {
         const query = `UPDATE ${this.#table} SET ? WHERE ${queryField} = ?`;
         this.connection.query(query, [data, queryMetric], (err, result) => {
+          if (err) reject(new Error(err.message));
+          resolve(result.message);
+        });
+      });
+
+      return response;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  /** Delete a record */
+  async deleteRecord(queryMetric, queryField = "id") {
+    try {
+      const response = await new Promise((resolve, reject) => {
+        const query = `DELETE FROM ${this.#table} WHERE ${queryField} = ?`;
+        this.connection.query(query, [queryMetric], (err, result) => {
           if (err) reject(new Error(err.message));
           resolve(result.message);
         });
