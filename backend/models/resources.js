@@ -16,6 +16,10 @@ class Resources extends DbService {
   async getAll() {
     return await super.getAll();
   }
+
+  async getLiveLink() {
+    return await super.getOne("live_link", "type");
+  }
 }
 
 module.exports = Resources;

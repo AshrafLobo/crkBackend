@@ -13,6 +13,14 @@ router.get("/", [auth], async (req, res) => {
   res.send(data);
 });
 
+router.get("/live_link", [auth], async (req, res) => {
+  const resources = new Resources(req.user.db);
+  const data = await resources.getLiveLink();
+  resources.close();
+
+  res.send(data[0]);
+});
+
 router.get("/:id", [auth], async (req, res) => {
   const resources = new Resources(req.user.db);
   const data = await resources.getOne(req.params.id);

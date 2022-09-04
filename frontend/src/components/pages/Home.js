@@ -97,8 +97,14 @@ function Home(props) {
             color: "success",
           });
         }
+      }
 
-        setVideoLink(live.data.video_link);
+      const video = await provider.get("resources/live_link/", {
+        "x-auth-token": auth.token,
+      });
+
+      if (video.data) {
+        setVideoLink(video.data.file_name);
       }
 
       const response = await provider.get(`attendance/${idNumber}`, {
