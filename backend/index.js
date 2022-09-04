@@ -13,9 +13,10 @@ const answers = require("./routes/answers");
 const auth = require("./routes/auth");
 const attendance = require("./routes/attendance");
 const company = require("./routes/company");
-const resources = require("./routes/resources");
 const faq = require("./routes/faq");
+const live = require("./routes/live");
 const proxy = require("./routes/proxy");
+const resources = require("./routes/resources");
 const user = require("./routes/user");
 const votes = require("./routes/votes");
 
@@ -38,9 +39,10 @@ app.use("/api/answers", answers);
 app.use("/api/auth", auth);
 app.use("/api/attendance", attendance);
 app.use("/api/company", company);
-app.use("/api/resources", resources);
 app.use("/api/faq", faq);
+app.use("/api/live", live);
 app.use("/api/proxy", proxy);
+app.use("/api/resources", resources);
 app.use("/api/user", user);
 app.use("/api/votes", votes);
 

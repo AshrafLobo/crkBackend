@@ -8,6 +8,7 @@ import {
   Container,
   Divider,
   FormControlLabel,
+  FormGroup,
   Grid,
   IconButton,
   List,
@@ -15,6 +16,7 @@ import {
   ListItemText,
   ListSubheader,
   Stack,
+  TextField,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -39,12 +41,18 @@ function Home(props) {
 
   /** Set user data */
   const [user, setUser] = useState({});
+  const [userLiveToken, setUserLiveToken] = useState("");
   const [proxy, setProxy] = useState({});
   const [hasConfirmed, setHasConfirmed] = useState(false);
   const [attending, setAttending] = useState(false);
   const [attendingOpts, setAttendingOpts] = useState({
-	  isAttending: 'PENDING CONFIRMATION',
-	  color: "default"
+    isAttending: "PENDING",
+    color: "default",
+  });
+  const [videoLink, setVideoLink] = useState("");
+  const [liveOpts, setLiveOpts] = useState({
+    liveStatus: "PENDING",
+    color: "default",
   });
   useEffect(() => {
     (async () => {
@@ -57,7 +65,12 @@ function Home(props) {
       });
 
       /** Initialize data */
-      let { full_name = "", ID_RegCert_No = "", email = "" } = data;
+      let {
+        full_name = "",
+        ID_RegCert_No = "",
+        email = "",
+        live_token = "",
+      } = data;
 
       /** Set user state */
       setUser({
@@ -66,6 +79,28 @@ function Home(props) {
         email: email,
       });
 
+      /** Set live token */
+      setUserLiveToken(live_token);
+
+      const live = await provider.get("live", {
+        "x-auth-token": auth.token,
+      });
+      if (live.data && live.data.is_active !== "pending") {
+        if (live.data.is_active === "false") {
+          setLiveOpts({
+            liveStatus: "STREAM ENDED",
+            color: "error",
+          });
+        } else {
+          setLiveOpts({
+            liveStatus: "LIVE",
+            color: "success",
+          });
+        }
+
+        setVideoLink(live.data.video_link);
+      }
+
       const response = await provider.get(`attendance/${idNumber}`, {
         "x-auth-token": auth.token,
       });
@@ -73,38 +108,35 @@ function Home(props) {
       if (response.data.length > 0) {
         setHasConfirmed(true);
         setAttending(true);
-		setAttendingOpts({
-			isAttending: "CONFIRMED",
-			color: "success"
-		})
+        setAttendingOpts({
+          isAttending: "CONFIRMED",
+          color: "success",
+        });
       }
 
       if (!isProxy) {
-		
-		try {
-			const proxyData = await provider.get(`user/getProxy/${idNumber}`, {
-				"x-auth-token": auth.token,
-			});
-			
-			if (
-			  proxyData.status === 200 &&
-			  Object.keys(proxyData.data).length > 0
-			) {
-			  setProxy(proxyData.data);
-			  setHasConfirmed(true);
-			  setAttendingOpts({
-				isAttending: "CONFIRMED",
-				color: "success"
-			  })
-			}
-		}
-		catch (e) {
-			console.log(e)
-		}  
+        try {
+          const proxyData = await provider.get(`user/getProxy/${idNumber}`, {
+            "x-auth-token": auth.token,
+          });
+
+          if (
+            proxyData.status === 200 &&
+            Object.keys(proxyData.data).length > 0
+          ) {
+            setProxy(proxyData.data);
+            setHasConfirmed(true);
+            setAttendingOpts({
+              isAttending: "CONFIRMED",
+              color: "success",
+            });
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
+        setAttending(true);
       }
-	  else {
-		  setAttending(true)
-	  }
     })();
   }, []);
 
@@ -147,18 +179,18 @@ function Home(props) {
           severity: "success",
           message: "Proxy created successfully",
         });
-		
-		setHasConfirmed(true)
-		setAttendingOpts({
-			isAttending: "CONFIRMED",
-			color: "success"
-		})
-		
-		setProxy({
-			full_name,
-			email,
-			ID_RegCert_No,
-		})
+
+        setHasConfirmed(true);
+        setAttendingOpts({
+          isAttending: "CONFIRMED",
+          color: "success",
+        });
+
+        setProxy({
+          full_name,
+          email,
+          ID_RegCert_No,
+        });
       } else {
         setToastOpt({
           open: true,
@@ -196,16 +228,15 @@ function Home(props) {
           severity: "success",
           message: "Successfully confirmed attendance",
         });
-		
-		setAttendingOpts({
-			isAttending: "CONFIRMED",
-			color: "success"
-		})
-		
+
+        setAttendingOpts({
+          isAttending: "CONFIRMED",
+          color: "success",
+        });
       } else {
         setToastOpt({
           open: true,
-          severity: "success",
+          severity: "default",
           message: response.data,
         });
       }
@@ -223,7 +254,7 @@ function Home(props) {
     const response = await provider.delete(`proxy/${ID_RegCert_No}`, {
       "x-auth-token": auth.token,
     });
-	
+
     if (response.data === true) {
       setProxy({});
 
@@ -232,12 +263,12 @@ function Home(props) {
         severity: "success",
         message: "Successfully removed proxy",
       });
-	  
-	  setHasConfirmed(false)
-	  setAttendingOpts({
-		isAttending: "PENDING CONFIRMATION",
-		color: "default"
-	  })
+
+      setHasConfirmed(false);
+      setAttendingOpts({
+        isAttending: "PENDING CONFIRMATION",
+        color: "default",
+      });
     }
   };
 
@@ -308,8 +339,8 @@ function Home(props) {
         container
         justifyContent="center"
         my={10}
-        rowGap={{ xs: 4, md: 0 }}
-        columnGap={4}
+        rowGap={{ xs: 3, md: 0 }}
+        columnGap={3}
       >
         <Grid
           item
@@ -366,7 +397,7 @@ function Home(props) {
           </Stack>
         </Grid>
         <Grid item xs={11} md={5}>
-          <Card p={2}>
+          <Card sx={{ paddingX: 2, paddingY: 5 }}>
             <List>
               <ListItem>
                 <Stack
@@ -411,7 +442,57 @@ function Home(props) {
                   }
                 />
               </ListItem>
-              <Divider light sx={{ marginX: 2, marginTop: 3 }} />
+              <Divider light sx={{ marginX: 2, marginY: 2 }} />
+              <ListSubheader>LIVE VIDEO DETAILS</ListSubheader>
+              <ListItem sx={{ paddingY: 0 }}>
+                <ListItemText
+                  primary={
+                    <>
+                      <b>VIDEO STATUS:</b>
+                      <Chip
+                        color={liveOpts.color}
+                        label={liveOpts.liveStatus}
+                        size="small"
+                        sx={{ borderRadius: "5px", marginLeft: 3 }}
+                      />
+                    </>
+                  }
+                />
+              </ListItem>
+              {videoLink ? (
+                <ListItem sx={{ paddingY: 0 }}>
+                  <ListItemText
+                    primary={
+                      <>
+                        <b>LIVE VIDEO LINK:</b>
+                        <FormGroup row sx={{ marginTop: 1 }}>
+                          <TextField
+                            InputProps={{
+                              readOnly: true,
+                            }}
+                            defaultValue={`${videoLink}${userLiveToken}`}
+                            size="small"
+                          />
+                          <Button
+                            variant="contained"
+                            disableElevation
+                            onClick={() =>
+                              window.open(`${videoLink}${userLiveToken}`)
+                            }
+                            sx={{
+                              marginLeft: { xs: 0, sm: 1 },
+                              marginTop: { xs: 1, sm: 0 },
+                            }}
+                          >
+                            OPEN LINK
+                          </Button>
+                        </FormGroup>
+                      </>
+                    }
+                  />
+                </ListItem>
+              ) : null}
+              <Divider light sx={{ marginX: 2, marginTop: 2 }} />
               <ListSubheader>CREATED PROXY</ListSubheader>
               <ListItem sx={{ paddingY: 0 }}>{proxyDetails}</ListItem>
             </List>

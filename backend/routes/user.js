@@ -24,6 +24,7 @@ router.get("/:ID_RegCert_No", [auth], async (req, res) => {
       "full_name",
       "email",
       "MemberNo",
+      "live_token",
     ])
   );
 });
@@ -33,8 +34,7 @@ router.get("/getProxy/:ID_RegCert_No", [auth], async (req, res) => {
   const data = await proxy.getProxy(req.params.ID_RegCert_No);
   proxy.close();
 
-  if (!data || data.length == 0)
-    return;
+  if (!data || data.length == 0) return;
 
   res.send(
     _.pick(data[0], ["ID_RegCert_No", "full_name", "email", "MemberNo"])

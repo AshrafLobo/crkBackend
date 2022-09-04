@@ -8,7 +8,7 @@ const {
   validateCode,
   validateChangePin,
 } = require("../models/proxy");
-const { Attendance } = require("../models/attendance")
+const { Attendance } = require("../models/attendance");
 const auth = require("../middleware/auth");
 const sendMail = require("../common/sendMail");
 
@@ -24,7 +24,9 @@ router.get("/:ID_RegCert_No", [auth], async (req, res) => {
       .status(404)
       .send(`The proxy with the ID ${req.params.ID_RegCert_No} does not exist`);
 
-  res.send(_.pick(data[0], ["ID_RegCert_No", "full_name", "email"]));
+  res.send(
+    _.pick(data[0], ["ID_RegCert_No", "full_name", "email", "live_token"])
+  );
 });
 
 /** Create new proxy  */
@@ -188,10 +190,10 @@ router.delete("/:ID_RegCert_No", [auth], async (req, res) => {
   try {
     proxy.deleteRecord(req.params.ID_RegCert_No);
     proxy.close();
-	
-	const attendance = new Attendance(req.user.db)
-	attendance.deleteRecord(req.params.ID_RegCert_No);
-	attendance.close()
+
+    const attendance = new Attendance(req.user.db);
+    attendance.deleteRecord(req.params.ID_RegCert_No);
+    attendance.close();
   } catch (e) {
     res.send(e);
     return;

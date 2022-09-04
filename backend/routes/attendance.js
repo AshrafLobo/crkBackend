@@ -5,7 +5,7 @@ const auth = require("../middleware/auth");
 
 const router = express.Router();
 
-router.get("/:ID_RegCertNo", [auth], async (req, res) => {
+router.get("/:id", [auth], async (req, res) => {
   const attendance = new Attendance(req.user.db);
   const data = await attendance.getOne(req.params.ID_RegCertNo);
   attendance.close();
