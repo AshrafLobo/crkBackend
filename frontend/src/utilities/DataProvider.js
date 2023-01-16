@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default class DataProvider {
-  #url = "http://localhost:5000/api";
+  #url = "https://secure.comp-rite.co.ke/registerBackend/api";
 
   async get(route, headers = {}, responseType = "json") {
     try {

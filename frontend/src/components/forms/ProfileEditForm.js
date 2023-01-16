@@ -35,7 +35,7 @@ function ProfileEditForm(props) {
               <FormikControl
                 control="input"
                 type="text"
-                label="ID Number/ Passport Number"
+                label="Phone Number"
                 name="ID_RegCert_No"
                 disabled={disabled}
               />

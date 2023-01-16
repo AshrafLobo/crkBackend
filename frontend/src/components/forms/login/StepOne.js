@@ -33,7 +33,7 @@ function StepOne({ data, next, options }) {
             <FormikControl
               control="input"
               type="text"
-              label="ID Number/Passport Number"
+              label="Phone number/ Email"
               name="ID_RegCert_No"
             />
             <Stack direction="row-reverse">
