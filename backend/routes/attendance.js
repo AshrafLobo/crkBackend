@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get("/:id", [auth], async (req, res) => {
   const attendance = new Attendance(req.user.db);
-  const data = await attendance.getOne(req.params.ID_RegCertNo);
+  const data = await attendance.getOne(req.params.id);
   attendance.close();
 
   if (!data)

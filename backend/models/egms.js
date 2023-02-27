@@ -1,11 +1,11 @@
 /** Import statements */
+// const Joi = require("joi");
 const DbService = require("../dbService");
 
-/** Faq model */
-class Faq extends DbService {
+class Egms extends DbService {
   /** Set database and table name */
-  constructor(database) {
-    super(database, "faq");
+  constructor() {
+    super(process.env.WEBSITE_DB, "egms");
     super.connect();
   }
 
@@ -17,9 +17,9 @@ class Faq extends DbService {
     return await super.getAll();
   }
 
-  async getViewable() {
-    return await super.getOne(true, "viewable");
+  async getIssuerEgms(issuerId) {
+    return await super.getOne(issuerId, "issuerId");
   }
 }
 
-module.exports = Faq;
+module.exports = Egms;

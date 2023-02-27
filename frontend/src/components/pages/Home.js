@@ -54,6 +54,7 @@ function Home(props) {
     liveStatus: "PENDING",
     color: "default",
   });
+  
   useEffect(() => {
     (async () => {
       let url = "user";
@@ -107,11 +108,13 @@ function Home(props) {
         setVideoLink(video.data.file_name);
       }
 
-      const response = await provider.get(`attendance/${idNumber}`, {
+      const attendance = await provider.get(`attendance/${idNumber}`, {
         "x-auth-token": auth.token,
       });
-
-      if (response.data.length > 0) {
+	  
+	  console.log("Attendance", `attendance/${idNumber}`);
+	  
+      if (attendance.data && attendance.data.length > 0) {	
         setHasConfirmed(true);
         setAttending(true);
         setAttendingOpts({

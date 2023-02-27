@@ -20,8 +20,12 @@ class Votes extends DbService {
   }
 
   async createRecord(data) {
-    data["created"] = new Date();
-    data["created"] = data["created"].toISOString();
+    const date = new Date();
+    data["created"] = `${date.getFullYear()}-${
+      date.getMonth() + 1
+    }-${date.getDay()} ${date.getHours() + 1}:${date.getMinutes() + 1}:${
+      date.getSeconds() + 1
+    }`;
     return await super.createRecord(data);
   }
 }

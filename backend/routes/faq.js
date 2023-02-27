@@ -24,4 +24,12 @@ router.get("/:id", [auth], async (req, res) => {
   res.send(data);
 });
 
+router.get("/viewable", [auth], async (req, res) => {
+  const faq = new Faq(req.user.db);
+  const data = await faq.getViewable();
+  faq.close();
+
+  res.send(data);
+});
+
 module.exports = router;

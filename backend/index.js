@@ -8,41 +8,62 @@ const config = require("config");
 const helmet = require("helmet");
 const compression = require("compression");
 
+/** Route imports */
 const agenda = require("./routes/agenda");
+const agms = require("./routes/agms");
 const answers = require("./routes/answers");
 const auth = require("./routes/auth");
 const attendance = require("./routes/attendance");
 const company = require("./routes/company");
+const egms = require("./routes/egms");
 const faq = require("./routes/faq");
+const issuers = require("./routes/issuers");
 const live = require("./routes/live");
+const news = require("./routes/news");
 const proxy = require("./routes/proxy");
 const resources = require("./routes/resources");
+const timelines = require("./routes/timelines");
 const user = require("./routes/user");
 const votes = require("./routes/votes");
 
 /** Check if `jwtPrivateKey` is set */
 if (!config.get("jwtPrivateKey")) {
-  // console.error("FATAL ERROR: jwtPrivateKey is not defined");
+  console.error("FATAL ERROR: jwtPrivateKey is not defined");
   process.exit(1);
 }
 
 /** Middleware */
 const app = express();
 app.use(express.json());
-// app.use(express.static("../ussd_dashboard/uploads"));
-app.use(cors());
-app.use(helmet());
+
+const corsOptions = {
+  origin: "*",
+};
+
+app.use(cors(corsOptions));
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
+);
 app.use(compression());
 
+/** Route configurations */
+app.use("/images", express.static("./images"));
 app.use("/api/agenda", agenda);
+app.use("/api/agms", agms);
 app.use("/api/answers", answers);
 app.use("/api/auth", auth);
 app.use("/api/attendance", attendance);
 app.use("/api/company", company);
+app.use("/api/egms", egms);
 app.use("/api/faq", faq);
+app.use("/api/issuers", issuers);
 app.use("/api/live", live);
+app.use("/api/news", news);
 app.use("/api/proxy", proxy);
 app.use("/api/resources", resources);
+app.use("/api/timelines", timelines);
 app.use("/api/user", user);
 app.use("/api/votes", votes);
 

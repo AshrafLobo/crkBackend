@@ -1,5 +1,6 @@
 {
   "name": "frontend",
+  "homepage": "http://192.168.0.221/register/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

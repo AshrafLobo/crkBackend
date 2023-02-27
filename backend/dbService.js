@@ -61,11 +61,11 @@ class DbService {
   }
 
   /** Get one record */
-  async getOne(queryMetric, queryField = "id") {
+  async getOne(queryValue, queryField = "id") {
     try {
       const response = await new Promise((resolve, reject) => {
         const query = `SELECT * FROM ${this.#table} WHERE ${queryField} = ?`;
-        this.connection.query(query, [queryMetric], (err, results) => {
+        this.connection.query(query, [queryValue], (err, results) => {
           if (err) reject(new Error(err.message));
           resolve(results);
         });
@@ -100,11 +100,11 @@ class DbService {
   }
 
   /** Update a record */
-  async updateRecord(data, queryMetric, queryField = "id") {
+  async updateRecord(data, queryValue, queryField = "id") {
     try {
       const response = await new Promise((resolve, reject) => {
         const query = `UPDATE ${this.#table} SET ? WHERE ${queryField} = ?`;
-        this.connection.query(query, [data, queryMetric], (err, result) => {
+        this.connection.query(query, [data, queryValue], (err, result) => {
           if (err) reject(new Error(err.message));
           resolve(result.message);
         });
@@ -117,11 +117,11 @@ class DbService {
   }
 
   /** Delete a record */
-  async deleteRecord(queryMetric, queryField = "id") {
+  async deleteRecord(queryValue, queryField = "id") {
     try {
       const response = await new Promise((resolve, reject) => {
         const query = `DELETE FROM ${this.#table} WHERE ${queryField} = ?`;
-        this.connection.query(query, [queryMetric], (err, result) => {
+        this.connection.query(query, [queryValue], (err, result) => {
           if (err) reject(new Error(err.message));
           resolve(result.message);
         });
