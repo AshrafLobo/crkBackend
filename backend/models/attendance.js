@@ -3,7 +3,7 @@ const Joi = require("joi");
 
 const DbService = require("../dbService");
 
-/** Proxy model */
+/** Attendance model */
 class Attendance extends DbService {
   /** Set database and table name */
   constructor(database) {

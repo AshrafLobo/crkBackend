@@ -2,6 +2,7 @@ const express = require("express");
 
 const Issuers = require("../models/issuers");
 const News = require("../models/news");
+const Dividends = require("../models/dividends");
 const Agms = require("../models/agms");
 const Egms = require("../models/egms");
 
@@ -28,6 +29,7 @@ router.get("/:id", async (req, res) => {
 
 router.get("/news/:issuerId", async (req, res) => {
   const news = new News();
+  const issuers = new Issuers();
   const data = await news.getIssuerNews(req.params.issuerId);
   news.close();
 
@@ -35,6 +37,33 @@ router.get("/news/:issuerId", async (req, res) => {
     return res
       .status(404)
       .send(`The news articles for the issuer were not found`);
+
+  const newData = await Promise.all(
+    data.map(async (item, index) => {
+      const { issuerId } = item;
+      const data = await issuers.getOne(issuerId);
+      const { srcSmall, name } = data[0];
+      const src = srcSmall;
+      const issuerName = name;
+
+      return {
+        ...item,
+        src,
+        issuerName,
+      };
+    })
+  );
+
+  res.send(newData);
+});
+
+router.get("/dividends/:issuerId", async (req, res) => {
+  const dividends = new Dividends();
+  const data = await dividends.getIssuerDividends(req.params.issuerId);
+  dividends.close();
+
+  if (!data || data.length < 1)
+    return res.status(404).send(`The dividends for the issuer were not found`);
 
   res.send(data);
 });
