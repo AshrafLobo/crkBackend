@@ -30,9 +30,9 @@ function validate(data) {
     lastName: Joi.string().required(),
     email: Joi.string().email().required(),
     phoneNo: Joi.string().required(),
-    company: Joi.string(),
-    jobTitle: Joi.string(),
-    noOfEmployees: Joi.string(),
+    company: Joi.string().allow(""),
+    jobTitle: Joi.string().allow(""),
+    noOfEmployees: Joi.string().allow(""),
     enquireAbout: Joi.string().required(),
     message: Joi.string().required(),
   });
