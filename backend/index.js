@@ -63,6 +63,7 @@ app.use("/api/attendance", attendance);
 app.use("/api/company", company);
 app.use("/api/contactUsForms", contactUsForm);
 app.use("/api/dividends", dividends);
+app.use("/api/download", express.static("./downloads"));
 app.use("/api/egms", egms);
 app.use("/api/faq", faq);
 app.use("/api/issuers", issuers);
