@@ -1,5 +1,5 @@
 /** Import statements */
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -7,6 +7,7 @@ dotenv.config();
 const { DB_USER, DB_PASSWORD, DB_PORT, HOST } = process.env;
 
 class DbService {
+  #connection;
   #database;
   #table;
 
@@ -15,13 +16,9 @@ class DbService {
     this.#table = table;
   }
 
-  get connection() {
-    return this._connection;
-  }
-
   /** Connect to mysql database */
   connect() {
-    this._connection = mysql.createConnection({
+    this.#connection = mysql.createConnection({
       host: HOST,
       user: DB_USER,
       password: DB_PASSWORD,
@@ -29,17 +26,17 @@ class DbService {
       port: DB_PORT,
     });
 
-    this._connection.connect((err) => {
+    this.#connection.connect((err) => {
       if (err) console.log(err.message);
-      //console.log(`DB ${this.#database} status: ` + this._connection.state);
+      // console.log(`DB ${this.#database} status: `);
     });
   }
 
   /** Close database connection */
   close() {
-    if (this._connection)
-      this._connection.end(() => {
-        //console.log(`Connection to ${this.#database} closed...`);
+    if (this.#connection)
+      this.#connection.end(() => {
+        // console.log(`Connection to ${this.#database} closed...`);
       });
   }
 
@@ -48,7 +45,7 @@ class DbService {
     try {
       const response = await new Promise((resolve, reject) => {
         const query = `SELECT * FROM ${this.#table}`;
-        this.connection.query(query, (err, results) => {
+        this.#connection.query(query, (err, results) => {
           if (err) reject(new Error(err.message));
           resolve(results);
         });
@@ -65,7 +62,7 @@ class DbService {
     try {
       const response = await new Promise((resolve, reject) => {
         const query = `SELECT * FROM ${this.#table} WHERE ${queryField} = ?`;
-        this.connection.query(query, [queryValue], (err, results) => {
+        this.#connection.query(query, [queryValue], (err, results) => {
           if (err) reject(new Error(err.message));
           resolve(results);
         });
@@ -85,7 +82,7 @@ class DbService {
     try {
       const response = await new Promise((resolve, reject) => {
         const query = `INSERT INTO ${this.#table} (??) VALUES (?)`;
-        this.connection.query(query, [keys, values], (err, result) => {
+        this.#connection.query(query, [keys, values], (err, result) => {
           /** Query error */
           if (err) reject(new Error(err.message));
           resolve(result);
@@ -104,7 +101,7 @@ class DbService {
     try {
       const response = await new Promise((resolve, reject) => {
         const query = `UPDATE ${this.#table} SET ? WHERE ${queryField} = ?`;
-        this.connection.query(query, [data, queryValue], (err, result) => {
+        this.#connection.query(query, [data, queryValue], (err, result) => {
           if (err) reject(new Error(err.message));
           resolve(result.message);
         });
@@ -121,7 +118,7 @@ class DbService {
     try {
       const response = await new Promise((resolve, reject) => {
         const query = `DELETE FROM ${this.#table} WHERE ${queryField} = ?`;
-        this.connection.query(query, [queryValue], (err, result) => {
+        this.#connection.query(query, [queryValue], (err, result) => {
           if (err) reject(new Error(err.message));
           resolve(result.message);
         });

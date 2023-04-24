@@ -1,10 +1,10 @@
 /** Import statements */
 const DbService = require("../dbService");
 
-class News extends DbService {
+class FeaturedDownloads extends DbService {
   /** Set database and table name */
   constructor() {
-    super(process.env.WEBSITE_DB, "news");
+    super(process.env.WEBSITE_DB, "featureddownloads");
     super.connect();
   }
 
@@ -15,10 +15,10 @@ class News extends DbService {
   async getAll() {
     return await super.getAll();
   }
-
-  async getIssuerNews(issuerId) {
-    return await super.getOne(issuerId, "issuerId");
+  
+  async getPostsResources(postId) {
+    return await super.getOne(postId, "postId");
   }
 }
 
-module.exports = News;
+module.exports = FeaturedDownloads;
