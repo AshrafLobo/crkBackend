@@ -1,93 +1,121 @@
 const express = require("express");
 
-const Issuers = require("../models/issuers");
+const Issuer = require("../models/issuers");
 const News = require("../models/news");
-const Dividends = require("../models/dividends");
-const Agms = require("../models/agms");
-const Egms = require("../models/egms");
+const Dividend = require("../models/dividends");
+const Agm = require("../models/agms");
+const Egm = require("../models/egms");
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const issuers = new Issuers();
-  const data = await issuers.getAll();
-  issuers.close();
-
-  res.send(data);
+  const agms = await Issuer.findAll();
+  res.send(agms);
 });
 
 router.get("/:id", async (req, res) => {
-  const issuers = new Issuers();
-  const data = await issuers.getOne(req.params.id);
-  issuers.close();
-
-  if (!data || data.length < 1)
-    return res.status(404).send("The issuer with the given ID was not found");
-
-  res.send(data);
+  const id = req.params.id;
+  try {
+    const issuer = await Issuer.findOne({ where: { id } });
+    if (!issuer) {
+      return res.status(404).send("Issuer not found");
+    }
+    res.json(issuer);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
 });
 
 router.get("/news/:issuerId", async (req, res) => {
-  const news = new News();
-  const issuers = new Issuers();
-  const data = await news.getIssuerNews(req.params.issuerId);
-  news.close();
+  const issuerId = req.params.issuerId;
 
-  if (!data || data.length < 1)
-    return res
-      .status(404)
-      .send(`The news articles for the issuer were not found`);
+  try {
+    const news = await News.findAll({
+      where: { issuerId },
+      attributes: [
+        "id",
+        "issuerId",
+        "title",
+        "article",
+        "originalSrc",
+        "originalPostDate",
+        "createdAt",
+        "updatedAt",
+      ],
+    });
 
-  const newData = await Promise.all(
-    data.map(async (item, index) => {
-      const { issuerId } = item;
-      const data = await issuers.getOne(issuerId);
-      const { srcSmall, name } = data[0];
-      const src = srcSmall;
-      const issuerName = name;
+    const newData = await Promise.all(
+      news.map(async (item) => {
+        const issuer = await Issuer.findOne({
+          where: { id: item.issuerId },
+          attributes: ["srcSmall", "name"],
+        });
 
-      return {
-        ...item,
-        src,
-        issuerName,
-      };
-    })
-  );
+        const { srcSmall, name } = issuer.toJSON();
 
-  res.send(newData);
+        return {
+          id: item.id,
+          issuerId: item.issuerId,
+          title: item.title,
+          article: item.article,
+          originalSrc: item.originalSrc,
+          originalPostDate: item.originalPostDate,
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
+          src: srcSmall,
+          issuerName: name,
+        };
+      })
+    );
+
+    res.send(newData);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
 });
 
 router.get("/dividends/:issuerId", async (req, res) => {
-  const dividends = new Dividends();
-  const data = await dividends.getIssuerDividends(req.params.issuerId);
-  dividends.close();
-
-  if (!data || data.length < 1)
-    return res.status(404).send(`The dividends for the issuer were not found`);
-
-  res.send(data);
+  const issuerId = req.params.issuerId;
+  try {
+    const issuer = await Dividend.findAll({ where: { issuerId } });
+    if (!issuer) {
+      return res.status(404).send("Dividend not found");
+    }
+    res.json(issuer);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
 });
 
 router.get("/agms/:issuerId", async (req, res) => {
-  const agms = new Agms();
-  const data = await agms.getIssuerAgms(req.params.issuerId);
-  agms.close();
-
-  if (!data || data.length < 1)
-    return res.status(404).send(`The agms for the issuer were not found`);
-
-  res.send(data);
+  const issuerId = req.params.issuerId;
+  try {
+    const issuer = await Agm.findAll({ where: { issuerId } });
+    if (!issuer) {
+      return res.status(404).send("Agm not found");
+    }
+    res.json(issuer);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
 });
 
 router.get("/egms/:issuerId", async (req, res) => {
-  const egms = new Egms();
-  const data = await egms.getIssuerEgms(req.params.issuerId);
-  egms.close();
-
-  if (!data || data.length < 1)
-    return res.status(404).send(`The egms for the issuer were not found`);
-
-  res.send(data);
+  const issuerId = req.params.issuerId;
+  try {
+    const issuer = await Egm.findAll({ where: { issuerId } });
+    if (!issuer) {
+      return res.status(404).send("Egm not found");
+    }
+    res.json(issuer);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
 });
 
 module.exports = router;

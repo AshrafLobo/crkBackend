@@ -1,26 +1,26 @@
 const express = require("express");
 
-const Dividends = require("../models/dividends");
+const Dividend = require("../models/dividends");
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const dividends = new Dividends();
-  const data = await dividends.getAll();
-  dividends.close();
-
-  res.send(data);
+  const dividends = await Dividend.findAll();
+  res.send(dividends);
 });
 
 router.get("/:id", async (req, res) => {
-  const dividends = new Dividends();
-  const data = await dividends.getOne(req.params.id);
-  dividends.close();
-
-  if (!data || data.length < 1)
-    return res.status(404).send("The dividend with the given ID was not found");
-
-  res.send(data);
+  const id = req.params.id;
+  try {
+    const dividend = await Dividend.findOne({ where: { id } });
+    if (!dividend) {
+      return res.status(404).send("Dividend not found");
+    }
+    res.json(dividend);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
 });
 
 module.exports = router;

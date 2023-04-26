@@ -1,24 +1,29 @@
 /** Import statements */
-const DbService = require("../dbService");
+const { sequelize } = require("../connection");
+const { DataTypes } = require("sequelize");
 
-class News extends DbService {
-  /** Set database and table name */
-  constructor() {
-    super(process.env.WEBSITE_DB, "news");
-    super.connect();
-  }
-
-  async getOne(id) {
-    return await super.getOne(id);
-  }
-
-  async getAll() {
-    return await super.getAll();
-  }
-
-  async getIssuerNews(issuerId) {
-    return await super.getOne(issuerId, "issuerId");
-  }
-}
+const News = sequelize.define("News", {
+  issuerId: {
+    type: DataTypes.NUMBER,
+  },
+  title: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  article: {
+    type: DataTypes.TEXT,
+  },
+  originalSrc: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 500,
+    },
+  },
+  originalPostDate: {
+    type: DataTypes.DATE,
+  },
+});
 
 module.exports = News;

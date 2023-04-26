@@ -1,21 +1,20 @@
 /** Import statements */
-// const Joi = require("joi");
-const DbService = require("../dbService");
+const { sequelize } = require("../connection");
+const { DataTypes } = require("sequelize");
 
-class Timelines extends DbService {
-  /** Set database and table name */
-  constructor() {
-    super(process.env.WEBSITE_DB, "timelines");
-    super.connect();
-  }
+const Timeline = sequelize.define("Timeline", {
+  title: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  description: {
+    type: DataTypes.TEXT,
+  },
+  timelineDate: {
+    type: DataTypes.DATEONLY,
+  },
+});
 
-  async getOne(id) {
-    return await super.getOne(id);
-  }
-
-  async getAll() {
-    return await super.getAll();
-  }
-}
-
-module.exports = Timelines;
+module.exports = Timeline;

@@ -11,27 +11,24 @@ const sendEmail = require("../common/sendMail");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const payrollDownloadForm = new PayrollDownloadForm();
-  const data = await payrollDownloadForm.getAll();
-  payrollDownloadForm.close();
-
-  if (!data)
-    return res.status(404).send("There are no payroll download forms found");
-
-  res.send(data);
+  const payrollDownloadForms = await PayrollDownloadForm.findAll();
+  res.send(payrollDownloadForms);
 });
 
 router.get("/:id", async (req, res) => {
-  const payrollDownloadForm = new PayrollDownloadForm();
-  const data = await payrollDownloadForm.getOne(req.params.id);
-  payrollDownloadForm.close();
-
-  if (!data)
-    return res
-      .status(404)
-      .send("The payroll download form with the given ID was not found");
-
-  res.send(data);
+  const id = req.params.id;
+  try {
+    const payrollDownloadForm = await PayrollDownloadForm.findOne({
+      where: { id },
+    });
+    if (!payrollDownloadForm) {
+      return res.status(404).send("The form was not found");
+    }
+    res.json(payrollDownloadForm);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
 });
 
 router.post("/", async (req, res) => {
@@ -49,14 +46,8 @@ router.post("/", async (req, res) => {
   ).forEach((key) => {
     sanitizedBody[key] = sanitizeHtml(req.body[key]);
   });
-  const {
-    firstName,
-    lastName,
-    email,
-    phoneNo,
-    company,
-    noOfEmployees,
-  } = sanitizedBody;
+  const { firstName, lastName, email, phoneNo, company, noOfEmployees } =
+    sanitizedBody;
   const output = `
   <p>PAYROLL DOWNLOAD FORM REQUEST</p>
   <h3>User Details</h3>
@@ -76,18 +67,19 @@ router.post("/", async (req, res) => {
   const { error } = validate(sanitizedBody);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const payrollDownloadForm = new PayrollDownloadForm();
-  const data = await payrollDownloadForm.createRecord(sanitizedBody);
-  payrollDownloadForm.close();
-
-  if (!data.insertId) return res.status(500).send(data.message);
-  sendEmail(
-    output,
-    "Payroll download form request",
-    "info@comp-rite.com, pay100@comp-rite.com"
-  );
-
-  res.send({ id: data.insertId, ...sanitizedBody });
+  try {
+    const payrollDownloadForm = await PayrollDownloadForm.create({
+      ...sanitizedBody,
+    });
+    sendEmail(
+      output,
+      "Payroll download form request",
+      "info@comp-rite.com, pay100@comp-rite.com"
+    );
+    res.status(204).json();
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 });
 
 module.exports = router;

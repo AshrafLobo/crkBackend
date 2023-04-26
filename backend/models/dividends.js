@@ -1,25 +1,35 @@
 /** Import statements */
-// const Joi = require("joi");
-const DbService = require("../dbService");
+const { sequelize } = require("../connection");
+const { DataTypes } = require("sequelize");
 
-class Dividends extends DbService {
-  /** Set database and table name */
-  constructor() {
-    super(process.env.WEBSITE_DB, "dividends");
-    super.connect();
-  }
+const Dividend = sequelize.define("Dividend", {
+  issuerId: {
+    type: DataTypes.NUMBER,
+  },
+  bookClosureDate: {
+    type: DataTypes.DATEONLY,
+  },
+  disbursmentDate: {
+    type: DataTypes.DATEONLY,
+  },
+  dividendType: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 50,
+    },
+  },
+  dividendRate: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 50,
+    },
+  },
+  status: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 50,
+    },
+  },
+});
 
-  async getOne(id) {
-    return await super.getOne(id);
-  }
-
-  async getAll() {
-    return await super.getAll();
-  }
-
-  async getIssuerDividends(issuerId) {
-    return await super.getOne(issuerId, "issuerId");
-  }
-}
-
-module.exports = Dividends;
+module.exports = Dividend;

@@ -1,26 +1,26 @@
 const express = require("express");
 
-const Egms = require("../models/egms");
+const Egm = require("../models/egms");
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const egms = new Egms();
-  const data = await egms.getAll();
-  egms.close();
-
-  res.send(data);
+  const egms = await Egm.findAll();
+  res.send(egms);
 });
 
 router.get("/:id", async (req, res) => {
-  const egms = new Egms();
-  const data = await egms.getOne(req.params.id);
-  egms.close();
-
-  if (!data || data.length < 1)
-    return res.status(404).send("The egm with the given ID was not found");
-
-  res.send(data);
+  const id = req.params.id;
+  try {
+    const egm = await Egm.findOne({ where: { id } });
+    if (!egm) {
+      return res.status(404).send("Egm not found");
+    }
+    res.json(egm);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
 });
 
 module.exports = router;

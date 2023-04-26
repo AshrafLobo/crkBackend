@@ -1,28 +1,40 @@
 /** Import statements */
 const Joi = require("joi");
+const { sequelize } = require("../connection");
+const { DataTypes } = require("sequelize");
 
-const DbService = require("../dbService");
-
-/**Contact us form model */
-class ContactUsForm extends DbService {
-  /** Set database and table name */
-  constructor() {
-    super(process.env.WEBSITE_DB, "contactusforms");
-    super.connect();
-  }
-
-  async getOne(id) {
-    return await super.getOne(id);
-  }
-
-  async getAll() {
-    return await super.getAll();
-  }
-
-  async createRecord(data) {
-    return await super.createRecord(data);
-  }
-}
+const ContactUsForm = sequelize.define("ContactUsForm", {
+  firstName: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  lastName: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  phoneNo: {
+    type: DataTypes.STRING,
+  },
+  email: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  subject: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  message: {
+    type: DataTypes.TEXT,
+  },
+});
 
 function validate(data) {
   const schema = Joi.object({

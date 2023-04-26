@@ -11,27 +11,24 @@ const sendEmail = require("../common/sendMail");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const shareRegistrationForm = new ShareRegistrationForm();
-  const data = await shareRegistrationForm.getAll();
-  shareRegistrationForm.close();
-
-  if (!data)
-    return res.status(404).send("There are no share registration forms found");
-
-  res.send(data);
+  const shareRegistrationForms = await ShareRegistrationForm.findAll();
+  res.send(shareRegistrationForms);
 });
 
 router.get("/:id", async (req, res) => {
-  const shareRegistrationForm = new ShareRegistrationForm();
-  const data = await shareRegistrationForm.getOne(req.params.id);
-  shareRegistrationForm.close();
-
-  if (!data)
-    return res
-      .status(404)
-      .send("The share registration form with the given ID was not found");
-
-  res.send(data);
+  const id = req.params.id;
+  try {
+    const shareRegistrationForm = await ShareRegistrationForm.findOne({
+      where: { id },
+    });
+    if (!shareRegistrationForm) {
+      return res.status(404).send("The form was not found");
+    }
+    res.json(shareRegistrationForm);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
 });
 
 router.post("/", async (req, res) => {
@@ -53,18 +50,18 @@ router.post("/", async (req, res) => {
   ).forEach((key) => {
     sanitizedBody[key] = sanitizeHtml(req.body[key]);
   });
-  
+
   const {
     firstName,
     lastName,
     email,
     phoneNo,
     address,
-	idNumber,
-	cdscNumber,
-	company,
-	service,
-	message
+    idNumber,
+    cdscNumber,
+    company,
+    service,
+    message,
   } = sanitizedBody;
   const output = `
   <p>SHARE REGISTRATION FORM REQUEST</p>
@@ -87,18 +84,19 @@ router.post("/", async (req, res) => {
   const { error } = validate(sanitizedBody);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const shareRegistrationForm = new ShareRegistrationForm();
-  const data = await shareRegistrationForm.createRecord(sanitizedBody);
-  shareRegistrationForm.close();
-
-  if (!data.insertId) return res.status(500).send(data.message);
-  sendEmail(
-    output,
-    "Share registration form request",
-    "info@comp-rite.com, shares@comp-rite.com, operations@comp-rite.com"
-  );
-
-  res.send({ id: data.insertId, ...sanitizedBody });
+  try {
+    const shareRegistrationForm = await ShareRegistrationForm.create({
+      ...sanitizedBody,
+    });
+    sendEmail(
+      output,
+      "Share registration form request",
+      "info@comp-rite.com, shares@comp-rite.com, operations@comp-rite.com"
+    );
+    res.status(204).json();
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 });
 
 module.exports = router;

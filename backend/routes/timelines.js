@@ -1,26 +1,26 @@
 const express = require("express");
 
-const Timelines = require("../models/timelines");
+const Timeline = require("../models/timelines");
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const timelines = new Timelines();
-  const data = await timelines.getAll();
-  timelines.close();
-
-  res.send(data);
+  const timelines = await Timeline.findAll();
+  res.send(timelines);
 });
 
 router.get("/:id", async (req, res) => {
-  const timelines = new Timelines();
-  const data = await timelines.getOne(req.params.id);
-  timelines.close();
-
-  if (!data || data.length < 1)
-    return res.status(404).send("The timeline with the given ID was not found");
-
-  res.send(data);
+  const id = req.params.id;
+  try {
+    const timeline = await Timeline.findOne({ where: { id } });
+    if (!timeline) {
+      return res.status(404).send("Timeline not found");
+    }
+    res.json(timeline);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
 });
 
 module.exports = router;

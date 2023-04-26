@@ -1,28 +1,64 @@
 /** Import statements */
 const Joi = require("joi");
+const { sequelize } = require("../connection");
+const { DataTypes } = require("sequelize");
 
-const DbService = require("../dbService");
-
-/**Share registration form model */
-class ShareRegistrationForm extends DbService {
-  /** Set database and table name */
-  constructor() {
-    super(process.env.WEBSITE_DB, "shareregistrationforms");
-    super.connect();
-  }
-
-  async getOne(id) {
-    return await super.getOne(id);
-  }
-
-  async getAll() {
-    return await super.getAll();
-  }
-
-  async createRecord(data) {
-    return await super.createRecord(data);
-  }
-}
+const ShareRegistrationForm = sequelize.define("ShareRegistrationForm", {
+  firstName: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  lastName: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  email: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  phoneNo: {
+    type: DataTypes.STRING,
+  },
+  address: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  idNumber: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  company: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  cdscNumber: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  service: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  message: {
+    type: DataTypes.TEXT,
+  },
+});
 
 function validate(data) {
   const schema = Joi.object({

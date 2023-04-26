@@ -1,25 +1,32 @@
 /** Import statements */
-// const Joi = require("joi");
-const DbService = require("../dbService");
+const { sequelize } = require("../connection");
+const { DataTypes } = require("sequelize");
 
-class Egms extends DbService {
-  /** Set database and table name */
-  constructor() {
-    super(process.env.WEBSITE_DB, "egms");
-    super.connect();
-  }
+const Egm = sequelize.define("Egm", {
+  issuerId: {
+    type: DataTypes.NUMBER,
+  },
+  title: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 500,
+    },
+  },
+  egmDate: {
+    type: DataTypes.DATE,
+  },
+  venue: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  status: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 50,
+    },
+  },
+});
 
-  async getOne(id) {
-    return await super.getOne(id);
-  }
-
-  async getAll() {
-    return await super.getAll();
-  }
-
-  async getIssuerEgms(issuerId) {
-    return await super.getOne(issuerId, "issuerId");
-  }
-}
-
-module.exports = Egms;
+module.exports = Egm;

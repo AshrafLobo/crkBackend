@@ -1,21 +1,35 @@
 /** Import statements */
-// const Joi = require("joi");
-const DbService = require("../dbService");
+const { sequelize } = require("../connection");
+const { DataTypes } = require("sequelize");
 
-class Issuers extends DbService {
-  /** Set database and table name */
-  constructor() {
-    super(process.env.WEBSITE_DB, "issuers");
-    super.connect();
-  }
+const Issuer = sequelize.define("Issuer", {
+  name: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  title: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  description: {
+    type: DataTypes.TEXT,
+  },
+  src: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  srcSmall: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+});
 
-  async getOne(id) {
-    return await super.getOne(id);
-  }
-
-  async getAll() {
-    return await super.getAll();
-  }
-}
-
-module.exports = Issuers;
+module.exports = Issuer;

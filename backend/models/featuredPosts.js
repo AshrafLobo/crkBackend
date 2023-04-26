@@ -1,20 +1,23 @@
 /** Import statements */
-const DbService = require("../dbService");
+const { sequelize } = require("../connection");
+const { DataTypes } = require("sequelize");
 
-class FeaturedPosts extends DbService {
-  /** Set database and table name */
-  constructor() {
-    super(process.env.WEBSITE_DB, "featuredposts");
-    super.connect();
-  }
+const FeaturedPost = sequelize.define("FeaturedPost", {
+  title: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  description: {
+    type: DataTypes.TEXT,
+  },
+  featuredPostSrc: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 500,
+    },
+  },
+});
 
-  async getOne(id) {
-    return await super.getOne(id);
-  }
-
-  async getAll() {
-    return await super.getAll();
-  }
-}
-
-module.exports = FeaturedPosts;
+module.exports = FeaturedPost;

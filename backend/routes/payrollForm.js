@@ -8,26 +8,22 @@ const sendEmail = require("../common/sendMail");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const payrollForm = new PayrollForm();
-  const data = await payrollForm.getAll();
-  payrollForm.close();
-
-  if (!data) return res.status(404).send("There are no payroll forms found");
-
-  res.send(data);
+  const payrollForms = await PayrollForm.findAll();
+  res.send(payrollForms);
 });
 
 router.get("/:id", async (req, res) => {
-  const payrollForm = new PayrollForm();
-  const data = await payrollForm.getOne(req.params.id);
-  payrollForm.close();
-
-  if (!data)
-    return res
-      .status(404)
-      .send("The payroll form with the given ID was not found");
-
-  res.send(data);
+  const id = req.params.id;
+  try {
+    const payrollForm = await PayrollForm.findOne({ where: { id } });
+    if (!payrollForm) {
+      return res.status(404).send("The form was not found");
+    }
+    res.json(payrollForm);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
 });
 
 router.post("/", async (req, res) => {
@@ -81,21 +77,18 @@ router.post("/", async (req, res) => {
   <p>${message}</p>
 `;
 
-  const { error } = validate(sanitizedBody);
-  if (error) return res.status(400).send(error.details[0].message);
+  try {
+    const payrollForm = await PayrollForm.create({ ...sanitizedBody });
+    sendEmail(
+      output,
+      "Payroll form request",
+      "info@comp-rite.com, pay100@comp-rite.com"
+    );
 
-  const payrollForm = new PayrollForm();
-  const data = await payrollForm.createRecord(sanitizedBody);
-  payrollForm.close();
-
-  if (!data.insertId) return res.status(500).send(data.message);
-  sendEmail(
-    output,
-    "Payroll form request",
-    "info@comp-rite.com, pay100@comp-rite.com"
-  );
-
-  res.send({ id: data.insertId, ...sanitizedBody });
+    res.status(204).json();
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 });
 
 module.exports = router;

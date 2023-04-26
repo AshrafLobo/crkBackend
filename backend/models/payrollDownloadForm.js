@@ -1,28 +1,43 @@
 /** Import statements */
 const Joi = require("joi");
+const { sequelize } = require("../connection");
+const { DataTypes } = require("sequelize");
 
-const DbService = require("../dbService");
-
-/** Payroll Download form model */
-class PayrollDownloadForm extends DbService {
-  /** Set database and table name */
-  constructor() {
-    super(process.env.WEBSITE_DB, "payrolldownloadforms");
-    super.connect();
-  }
-
-  async getOne(id) {
-    return await super.getOne(id);
-  }
-
-  async getAll() {
-    return await super.getAll();
-  }
-
-  async createRecord(data) {
-    return await super.createRecord(data);
-  }
-}
+const PayrollDownloadForm = sequelize.define("PayrollDownloadForm", {
+  firstName: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  lastName: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  email: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  phoneNo: {
+    type: DataTypes.STRING,
+  },
+  company: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 255,
+    },
+  },
+  noOfEmployees: {
+    type: DataTypes.STRING,
+    validate: {
+      max: 50,
+    },
+  },
+});
 
 function validate(data) {
   const schema = Joi.object({
