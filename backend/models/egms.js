@@ -2,7 +2,7 @@
 const { sequelize } = require("../connection");
 const { DataTypes } = require("sequelize");
 
-const Egm = sequelize.define("Egm", {
+const Egm = sequelize.define("egm", {
   issuerId: {
     type: DataTypes.NUMBER,
   },

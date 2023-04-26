@@ -2,7 +2,7 @@
 const { sequelize } = require("../connection");
 const { DataTypes } = require("sequelize");
 
-const FeaturedPost = sequelize.define("FeaturedPost", {
+const FeaturedPost = sequelize.define("featuredpost", {
   title: {
     type: DataTypes.STRING,
     validate: {

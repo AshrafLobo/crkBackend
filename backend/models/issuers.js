@@ -2,7 +2,7 @@
 const { sequelize } = require("../connection");
 const { DataTypes } = require("sequelize");
 
-const Issuer = sequelize.define("Issuer", {
+const Issuer = sequelize.define("issuer", {
   name: {
     type: DataTypes.STRING,
     validate: {

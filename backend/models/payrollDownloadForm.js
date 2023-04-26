@@ -3,7 +3,7 @@ const Joi = require("joi");
 const { sequelize } = require("../connection");
 const { DataTypes } = require("sequelize");
 
-const PayrollDownloadForm = sequelize.define("PayrollDownloadForm", {
+const PayrollDownloadForm = sequelize.define("payrolldownloadform", {
   firstName: {
     type: DataTypes.STRING,
     validate: {

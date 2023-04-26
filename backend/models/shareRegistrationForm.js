@@ -3,7 +3,7 @@ const Joi = require("joi");
 const { sequelize } = require("../connection");
 const { DataTypes } = require("sequelize");
 
-const ShareRegistrationForm = sequelize.define("ShareRegistrationForm", {
+const ShareRegistrationForm = sequelize.define("shareregistrationform", {
   firstName: {
     type: DataTypes.STRING,
     validate: {

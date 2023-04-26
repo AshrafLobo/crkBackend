@@ -2,7 +2,7 @@
 const { sequelize } = require("../connection");
 const { DataTypes } = require("sequelize");
 
-const FeaturedDownload = sequelize.define("FeaturedDownload", {
+const FeaturedDownload = sequelize.define("featureddownload", {
   postId: {
     type: DataTypes.NUMBER,
   },
