@@ -9,7 +9,7 @@ router.get("/", async (req, res) => {
   let { page } = req.query;
   let size = 9;
 
-  if (page && size) {
+  if (page) {
     if (Number.isNaN(page) || page < 0) res.status(404).send("Invalid query");
 
     page = parseInt(page);
@@ -21,6 +21,7 @@ router.get("/", async (req, res) => {
     const news = await News.findAndCountAll({
       limit: size,
       offset: page * size,
+      order: [["originalPostDate", "DESC"]],
     });
     const newData = await Promise.all(
       news.rows.map(async (item) => {
