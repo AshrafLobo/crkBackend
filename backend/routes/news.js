@@ -6,28 +6,29 @@ const Issuer = require("../models/issuers");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  try {
-    const news = await News.findAll({
-      attributes: [
-        "id",
-        "issuerId",
-        "title",
-        "article",
-        "originalSrc",
-        "originalPostDate",
-        "createdAt",
-        "updatedAt",
-      ],
-    });
+  let { page } = req.query;
+  let size = 9;
 
+  if (page && size) {
+    if (Number.isNaN(page) || page < 0) res.status(404).send("Invalid query");
+
+    page = parseInt(page);
+  } else {
+    page = 0;
+  }
+
+  try {
+    const news = await News.findAndCountAll({
+      limit: size,
+      offset: page * size,
+    });
     const newData = await Promise.all(
-      news.map(async (item) => {
+      news.rows.map(async (item) => {
         const issuer = await Issuer.findOne({
           where: { id: item.issuerId },
           attributes: ["srcSmall", "name"],
         });
         const { srcSmall, name } = issuer.toJSON();
-
         return {
           id: item.id,
           issuerId: item.issuerId,
@@ -42,8 +43,11 @@ router.get("/", async (req, res) => {
         };
       })
     );
-
-    res.send(newData);
+    res.send({
+      data: [...newData],
+      currentPage: page,
+      totalPages: Math.ceil(news.count / size),
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send("Server Error");
